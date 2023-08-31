@@ -1,8 +1,8 @@
 # Metadata for package. Used in setup.py and plugin files.
 
-version = "0.1.2"
+version = "0.1.1"
 name = "opensesame-plugin-markers"
-description = "Plugin for controlling Leiden Univ marker devices."
+description = "Plugin for controlling Leiden Univ marker devices with OpenSesame 4."
 url = "https://github.com/solo-fsw/opensesame_plugin_markers"
 author = "SOLO Research Support FSW Leiden"
 author_email = "labsupport@FSW.leidenuniv.nl"
