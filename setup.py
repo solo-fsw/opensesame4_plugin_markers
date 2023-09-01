@@ -11,7 +11,7 @@ import os
 import glob
 import version_info
 
-print("Running setup for markers version {}.".format(version_info.version))
+print("Running setup for markers plugin version {}.".format(version_info.version))
 
 def files(path):
 	
@@ -28,11 +28,11 @@ def data_files():
 	# Return the target folders and their respective data files:
 	return [
 		("share/opensesame_plugins/markers_send",
-		 files("opensesame_plugins/markers_send/*")),
+		 files("opensesame_plugins/markers/markers_send/*")),
 		("share/opensesame_plugins/markers_init",
-		 files("opensesame_plugins/markers_init/*")),
+		 files("opensesame_plugins/markers/markers_init/*")),
 		("share/opensesame_extensions/markers_extension",
-		 files("opensesame_extensions/markers_extension/*")),
+		 files("opensesame_extensions/markers/markers_extension/*")),
 		 ("share/opensesame_plugins/markers_init", 
     	["version_info.py"]),
 		 ("share/opensesame_plugins/markers_send", 
@@ -41,8 +41,7 @@ def data_files():
 
 
 setup(
-	# Some general metadata. By convention, a plugin is named:
-	# opensesame-plugin-[plugin name]
+	# Some general metadata.
 	name=version_info.name,
 	version=version_info.version,
 	description=version_info.description,
