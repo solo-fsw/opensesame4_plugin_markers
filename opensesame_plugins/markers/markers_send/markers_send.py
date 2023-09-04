@@ -151,8 +151,9 @@ class qtmarkers_send(MarkersSend, QtAutoPlugin):
         """
 
         # First, call the parent constructor, which constructs the GUI controls
-        # based on info.json.
-        QtAutoPlugin.init_edit_widget(self)
+        # based on __init_.py.
+        super().init_edit_widget()  
+        
         self.custom_interactions()
 
     def apply_edit_changes(self):

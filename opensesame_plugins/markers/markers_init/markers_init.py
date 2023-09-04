@@ -149,7 +149,7 @@ class MarkersInit(Item):
 
         self.set_device_var(device)
         self.set_com_port_var(com_port)
-        
+
 
     def run(self):
 
@@ -302,8 +302,9 @@ class qtmarkers_init(MarkersInit, QtAutoPlugin):
         """
 
         # First, call the parent constructor, which constructs the GUI controls
-        # based on info.json.
-        QtAutoPlugin.init_edit_widget(self)
+        # based on __init_.py.
+        super().init_edit_widget()        
+
         self.custom_interactions()
 
     def apply_edit_changes(self):
