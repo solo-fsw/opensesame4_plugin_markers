@@ -5,7 +5,7 @@ OpenSesame plugin for sending markers to Leiden Univ Marker device.
 """
 
 from libopensesame.py3compat import *
-from libopensesame.item import item
+from libopensesame.item import Item
 from libqtopensesame.items.qtautoplugin import qtautoplugin
 from libopensesame.exceptions import osexception
 import serial
