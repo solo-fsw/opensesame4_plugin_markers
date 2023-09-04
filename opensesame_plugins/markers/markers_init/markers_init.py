@@ -18,7 +18,7 @@ from python_markers import marker_management as mark
 import version_info
 
 
-class markers_init(item):
+class MarkersInit(Item):
     """
     This class handles the basic functionality of the item.
     """

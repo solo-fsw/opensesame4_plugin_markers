@@ -17,7 +17,7 @@ import pandas
 import sys
 
 
-class markers_extension(base_extension):
+class MarkersExtension(BaseExtension):
 
 	"""
 	desc:

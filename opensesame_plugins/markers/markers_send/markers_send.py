@@ -17,7 +17,7 @@ import pandas
 import version_info
 
 
-class markers_send(item):
+class MarkersSend(Item):
     """
     This class handles the basic functionality of the item.
     """
