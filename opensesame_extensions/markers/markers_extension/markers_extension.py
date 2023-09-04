@@ -9,9 +9,8 @@ import os
 import json
 from libopensesame.py3compat import *
 from libopensesame.exceptions import osexception
-from libqtopensesame.extensions import base_extension
+from libqtopensesame.extensions import BaseExtension
 from libopensesame import misc
-from libqtopensesame.misc.translate import translation_context
 import markdown
 import pandas
 import sys

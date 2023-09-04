@@ -6,7 +6,7 @@ OpenSesame plugin for sending markers to Leiden Univ Marker device.
 
 from libopensesame.py3compat import *
 from libopensesame.item import Item
-from libqtopensesame.items.qtautoplugin import qtautoplugin
+from libqtopensesame.items.qtautoplugin import QtAutoPlugin
 from libopensesame.exceptions import osexception
 import serial
 import sys
@@ -117,7 +117,7 @@ class MarkersSend(Item):
         self.set_item_onset()
         
 
-class qtmarkers_send(markers_send, qtautoplugin):
+class qtmarkers_send(MarkersSend, QtAutoPlugin):
     """
     This class handles the GUI aspect of the plug-in. By using qtautoplugin, we
     usually need to do hardly anything, because the GUI is defined in info.json.
@@ -137,8 +137,8 @@ class qtmarkers_send(markers_send, qtautoplugin):
         """
 
         # Call the parent constructors.
-        markers_send.__init__(self, name, experiment, script)
-        qtautoplugin.__init__(self, __file__)
+        MarkersSend.__init__(self, name, experiment, script)
+        QtAutoPlugin.__init__(self, __file__)
 
     def init_edit_widget(self):
 
@@ -151,7 +151,7 @@ class qtmarkers_send(markers_send, qtautoplugin):
 
         # First, call the parent constructor, which constructs the GUI controls
         # based on info.json.
-        qtautoplugin.init_edit_widget(self)
+        QtAutoPlugin.init_edit_widget(self)
         self.custom_interactions()
 
     def apply_edit_changes(self):
@@ -161,7 +161,7 @@ class qtmarkers_send(markers_send, qtautoplugin):
             Applies the controls.
         """
 
-        if not qtautoplugin.apply_edit_changes(self) or self.lock:
+        if not QtAutoPlugin.apply_edit_changes(self) or self.lock:
             return False
         self.custom_interactions()
 
@@ -177,7 +177,7 @@ class qtmarkers_send(markers_send, qtautoplugin):
         if self.lock:
             return
         self.lock = True
-        w = qtautoplugin.edit_widget(self)
+        w = QtAutoPlugin.edit_widget(self)
         self.custom_interactions()
         self.lock = False
         return w
