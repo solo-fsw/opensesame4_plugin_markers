@@ -67,6 +67,9 @@ class MarkersSend(Item):
             Prepare phase.
         """
 
+        # Call the parent constructor.
+        super().prepare()        
+
         # Check input of plugin:
         device_tag = self.get_tag()
         if not(bool(re.match("^[A-Za-z0-9_-]*$", device_tag)) and bool(re.match("^[A-Za-z]*$", device_tag[0]))):
@@ -82,8 +85,6 @@ class MarkersSend(Item):
         elif self.get_duration() < 0:
             raise osexception("Object duration must be a positive number")
 
-        # Call the parent constructor.
-        super().prepare()
 
     def run(self):
 

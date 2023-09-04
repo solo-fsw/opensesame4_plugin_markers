@@ -119,6 +119,9 @@ class MarkersInit(Item):
             Prepare phase.
         """
 
+        # Call the parent constructor.
+        super().prepare()
+
         # Check input of plugin:
         device_tag = self.get_tag_gui()
         if not(bool(re.match("^[A-Za-z0-9_-]*$", device_tag)) and bool(re.match("^[A-Za-z]*$", device_tag[0]))):
@@ -146,9 +149,7 @@ class MarkersInit(Item):
 
         self.set_device_var(device)
         self.set_com_port_var(com_port)
-
-        # Call the parent constructor.
-        super().prepare()
+        
 
     def run(self):
 
