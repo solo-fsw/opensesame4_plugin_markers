@@ -83,7 +83,7 @@ class MarkersSend(Item):
             raise osexception("Object duration must be a positive number")
 
         # Call the parent constructor.
-        Item.prepare(self)
+        super().prepare()
 
     def run(self):
 
