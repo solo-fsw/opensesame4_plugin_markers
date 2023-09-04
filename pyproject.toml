@@ -9,7 +9,7 @@ packages = [
     {include = "opensesame_plugins"},
     {include = "opensesame_extensions"},
 ]
-include = [version_info.py]
+include = ["version_info.py"]
 
 [tool.poetry.dependencies]
 python = ">= 3.7"
