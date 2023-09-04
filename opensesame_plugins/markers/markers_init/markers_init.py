@@ -148,7 +148,7 @@ class MarkersInit(Item):
         self.set_com_port_var(com_port)
 
         # Call the parent constructor.
-        item.prepare(self)
+        Item.prepare(self)
 
     def run(self):
 
