@@ -105,7 +105,7 @@ class MarkersSend(Item):
             raise osexception(f"Error sending marker with value {self.get_value()}: {sys.exc_info()[1]}")
 
         # Sleep for object duration (blocking)
-        self.sleep(int(self.get_duration()))
+        self.clock.sleep(int(self.get_duration()))
 
         # Reset marker value to zero, if specified
         if self.get_duration() > 5 and self.get_reset_to_zero():
