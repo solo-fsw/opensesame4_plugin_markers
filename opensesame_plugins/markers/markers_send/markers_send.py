@@ -50,13 +50,13 @@ class MarkersSend(Item):
 
     def is_already_init(self):
         try:
-            return hasattr(self.experiment, f"markers_{self.get_tag()}")
+            return hasattr(self.experiment.var, f"markers_{self.get_tag()}")
         except:
             return False
 
     def get_marker_manager(self):
         if self.is_already_init():
-            return getattr(self.experiment, f"markers_{self.get_tag()}")
+            return getattr(self.experiment.var, f"markers_{self.get_tag()}")
         else:
             return None
 
