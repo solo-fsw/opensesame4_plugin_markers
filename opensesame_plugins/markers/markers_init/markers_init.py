@@ -169,7 +169,7 @@ class MarkersInit(Item):
         marker_manager = mark.MarkerManager(device_type=device,
                                             device_address=com_port,
                                             crash_on_marker_errors=self.get_crash_on_mark_error_gui(),
-                                            time_function_ms=lambda: self.time())
+                                            time_function_ms=lambda: self.experiment.time())
         self.set_marker_manager_var(marker_manager)
 
         # Create marker_prop (dict with marker manager properties)
