@@ -169,7 +169,7 @@ class MarkersInit(Item):
         marker_manager = mark.MarkerManager(device_type=device,
                                             device_address=com_port,
                                             crash_on_marker_errors=self.get_crash_on_mark_error_gui(),
-                                            time_function_ms=lambda: self.experiment.time())
+                                            time_function_ms=lambda: self.clock.time())
         self.set_marker_manager_var(marker_manager)
 
         # Create marker_prop (dict with marker manager properties)
@@ -180,15 +180,15 @@ class MarkersInit(Item):
         pulse_dur = 100
         if self.var.marker_flash_255 == 'yes':
             marker_manager.set_value(255)
-            self.sleep(pulse_dur)
+            self.clock.sleep(pulse_dur)
             marker_manager.set_value(0)
-            self.sleep(pulse_dur)
+            self.clock.sleep(pulse_dur)
             marker_manager.set_value(255)
-            self.sleep(pulse_dur)
+            self.clock.sleep(pulse_dur)
 
         # Reset:
         marker_manager.set_value(0)
-        self.sleep(pulse_dur)
+        self.clock.sleep(pulse_dur)
 
         # Add cleanup function:
         self.experiment.cleanup_functions.append(self.cleanup)
@@ -199,7 +199,7 @@ class MarkersInit(Item):
 
         # Reset value:
         self.get_marker_manager_var().set_value(0)
-        self.sleep(100)
+        self.clock.sleep(100)
 
         # Generate and save marker file in same location as the logfile
         if self.var.marker_gen_mark_file == u'yes':
