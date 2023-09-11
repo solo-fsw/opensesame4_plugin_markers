@@ -70,18 +70,18 @@ class MarkersInit(Item):
 
     def is_already_init(self):
         try:
-            return hasattr(self.experiment.var, f"markers_{self.get_tag_gui()}")
+            return hasattr(self.experiment, f"markers_{self.get_tag_gui()}")
         except:
             return False
 
     def get_marker_manager_var(self):
         if self.is_already_init():
-            return getattr(self.experiment.var, f"markers_{self.get_tag_gui()}")
+            return getattr(self.experiment, f"markers_{self.get_tag_gui()}")
         else:
             return None
 
     def set_marker_manager_var(self, mark_man):
-        setattr(self.experiment.var, f"markers_{self.get_tag_gui()}", mark_man)
+        setattr(self.experiment, f"markers_{self.get_tag_gui()}", mark_man)
 
     def set_marker_manager_tag_var(self):
         try:
@@ -99,13 +99,13 @@ class MarkersInit(Item):
         setattr(self.experiment.var, f"markers_com_port_{self.get_tag_gui()}", com_port)
 
     def get_com_port_var(self):
-        return getattr(self.experiment.var, f"markers_com_port_{self.get_tag_gui()}")
+        return getattr(self.experiment, f"markers_com_port_{self.get_tag_gui()}")
 
     def set_device_var(self, device):
         setattr(self.experiment.var, f"markers_device_{self.get_tag_gui()}", device)
 
     def get_device_var(self):
-        return getattr(self.experiment.var, f"markers_device_{self.get_tag_gui()}")
+        return getattr(self.experiment, f"markers_device_{self.get_tag_gui()}")
 
     def set_marker_tables_var(self, marker_table, summary_table, error_table):
         setattr(self.experiment.var, f"markers_marker_table_{self.get_tag_gui()}", marker_table)
