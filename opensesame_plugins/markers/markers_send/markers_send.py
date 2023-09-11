@@ -101,6 +101,7 @@ class MarkersSend(Item):
         # Send marker:
         try:
             print(self.get_marker_manager())
+            print(type(self.get_marker_manager()))
             self.get_marker_manager().set_value(int(self.get_value()))
         except:
             raise osexception(f"Error sending marker with value {self.get_value()}: {sys.exc_info()[1]}")
