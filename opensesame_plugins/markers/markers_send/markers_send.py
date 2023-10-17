@@ -49,14 +49,15 @@ class MarkersSend(Item):
         return self.var.marker_reset_to_zero == u'yes'    
 
     def is_already_init(self):
-        try:
-            return hasattr(self.experiment, f"markers_{self.get_tag()}")
-        except:
+        if (hasattr(self.experiment, "marker_managers") and 
+            self.get_tag() in self.experiment.marker_managers):
+            return True
+        else:
             return False
 
     def get_marker_manager(self):
         if self.is_already_init():
-            return getattr(self.experiment, f"markers_{self.get_tag()}")
+            return self.experiment.marker_managers.get(self.get_tag())
         else:
             return None
 
@@ -66,9 +67,6 @@ class MarkersSend(Item):
         desc:
             Prepare phase.
         """
-
-        # Call the parent constructor.
-        super().prepare()        
 
         # Check input of plugin:
         device_tag = self.get_tag()
@@ -85,6 +83,8 @@ class MarkersSend(Item):
         elif self.get_duration() < 0:
             raise osexception("Object duration must be a positive number")
 
+        # Call the parent constructor.
+        Item.prepare(self)
 
     def run(self):
 
@@ -98,10 +98,7 @@ class MarkersSend(Item):
             raise osexception("You must have a markers_init item before sending markers."
                               " Make sure the Device tags match.")
 
-        # Send marker:
         try:
-            print(self.get_marker_manager())
-            print(type(self.get_marker_manager()))
             self.get_marker_manager().set_value(int(self.get_value()))
         except:
             raise osexception(f"Error sending marker with value {self.get_value()}: {sys.exc_info()[1]}")
@@ -153,9 +150,8 @@ class qtmarkers_send(MarkersSend, QtAutoPlugin):
         """
 
         # First, call the parent constructor, which constructs the GUI controls
-        # based on __init_.py.
-        super().init_edit_widget()  
-        
+        # based on info.json.
+        QtAutoPlugin.init_edit_widget(self)
         self.custom_interactions()
 
     def apply_edit_changes(self):

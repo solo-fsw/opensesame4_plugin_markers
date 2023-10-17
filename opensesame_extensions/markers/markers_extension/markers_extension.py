@@ -48,57 +48,76 @@ class MarkersExtension(BaseExtension):
 		"""
 
 		try:
+
+			# Init markdown, 
+			md = ''
+
 			var = self.extension_manager.provide(
 				'jupyter_workspace_variable',
 				name='var'
 			)
 
-			if hasattr(var, 'markers_tags'):
+			marker_tags = self.extension_manager.provide(
+				'jupyter_workspace_variable',
+				name='markers_tags'
+			)
 
-				# Get tag(s) of marker device(s)
-				marker_tags = var.markers_tags
+			# print basic header info
+			md += u'Time: ' + str(time.ctime()) + u'\n\n'
 
-				# Init markdown, print basic header info
-				md = ''
-				md += u'Time: ' + str(time.ctime()) + u'\n\n'
+			# Append marker tables of each marker device:
+			for tag in marker_tags:
 
-				# Append marker tables of each marker device:
-				for tag in marker_tags:
+				# Print tag
+				md += u'#' + str(tag) + u'\n'
 
-					# Print marker device properties
-					md += u'#' + str(tag) + u'\n'
-					cur_marker_props = getattr(var, f"markers_prop_{tag}")
+				# Get and print marker device properties
+				cur_marker_props = self.extension_manager.provide(
+					'jupyter_workspace_variable',
+					name=f"markers_prop_{tag}"
+				)			
 
-					for marker_prop in cur_marker_props:
-						md += u'- ' + str(marker_prop) + u': ' + str(cur_marker_props[marker_prop]) + u'\n'
+				for marker_prop in cur_marker_props:
+					md += u'- ' + str(marker_prop) + u': ' + str(cur_marker_props[marker_prop]) + u'\n'
 
-					# Get marker tables
-					marker_df = getattr(var, f"markers_marker_table_{tag}")
-					summary_df = getattr(var, f"markers_summary_table_{tag}")
-					error_df = getattr(var, f"markers_error_table_{tag}")
+				# Get marker tables
+				summary_df = self.extension_manager.provide(
+					'jupyter_workspace_variable',
+					name=f"markers_summary_table_{tag}"
+				)
 
-					# Add summary table to md
-					summary_df = summary_df.round(decimals=3)
-					md = add_table_to_md(md, summary_df, 'Summary table')
+				marker_df = self.extension_manager.provide(
+					'jupyter_workspace_variable',
+					name=f"markers_marker_table_{tag}"
+				)
 
-					if summary_df.empty:
-						md += u'No markers were sent, summary table empty\n\n'
+				error_df = self.extension_manager.provide(
+					'jupyter_workspace_variable',
+					name=f"markers_error_table_{tag}"
+				)	
 
-					# Add marker table to md
-					marker_df = marker_df.round(decimals=3)
-					md = add_table_to_md(md, marker_df, 'Marker table')
+				# Add summary table to md
+				summary_df = summary_df.round(decimals=3)
+				md = add_table_to_md(md, summary_df, 'Summary table')
 
-					if marker_df.empty:
-						md += u'No markers were sent, marker table empty\n\n'
+				if summary_df.empty:
+					md += u'No markers were sent, summary table empty\n\n'
 
-					# Add error table to md
-					md = add_table_to_md(md, error_df, 'Error table')
+				# Add marker table to md
+				marker_df = marker_df.round(decimals=3)
+				md = add_table_to_md(md, marker_df, 'Marker table')
 
-					if error_df.empty:
-						md += u'No marker errors occurred, error table empty\n\n'
+				if marker_df.empty:
+					md += u'No markers were sent, marker table empty\n\n'
 
-				# Open the tab
-				self.tabwidget.open_markdown(md, u'os-finished-success', u'Marker tables')
+				# Add error table to md
+				md = add_table_to_md(md, error_df, 'Error table')
+
+				if error_df.empty:
+					md += u'No marker errors occurred, error table empty\n\n'
+
+			# Open the tab
+			self.tabwidget.open_markdown(md, u'os-finished-success', u'Marker tables')
 
 		# Occasionally, something goes wrong getting the marker tables
 		except:

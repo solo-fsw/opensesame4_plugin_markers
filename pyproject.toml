@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "opensesame-markers-plugin"
 version = "0.1.1"
-description = "Markers plugin for OpenSesame"
+description = "Markers plugin for OpenSesame 4"
 authors = ["Iris Spruit <i.m.spruit@fsw.leidenuniv.nl>"]
 readme = "readme.md"
 repository = "https://github.com/solo-fsw/opensesame4_plugin_markers"
@@ -9,7 +9,7 @@ packages = [
     {include = "opensesame_plugins"},
     {include = "opensesame_extensions"},
 ]
-include = ["version_info.py"]
+include = ["markers_version_info.py"]
 
 [tool.poetry.dependencies]
 python = ">= 3.7"
