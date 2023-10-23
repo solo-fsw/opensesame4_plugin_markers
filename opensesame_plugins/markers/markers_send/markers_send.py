@@ -14,16 +14,13 @@ import re
 import os
 import pandas
 
-import version_info
-
 
 class MarkersSend(Item):
     """
     This class handles the basic functionality of the item.
     """
 
-    version = version_info.version
-    description = 'Sends marker to Leiden Univ marker device - Markers plugin ' + version
+    description = 'Sends marker to Leiden Univ marker device - Markers plugin for OpenSesame 4'
 
     def reset(self):
 

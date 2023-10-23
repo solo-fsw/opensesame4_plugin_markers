@@ -16,8 +16,6 @@ import os
 import pandas
 
 from python_markers import marker_management as mark
-import markers_version_info
-
 
 
 class MarkersInit(Item):
@@ -25,8 +23,7 @@ class MarkersInit(Item):
     This class handles the basic functionality of the item.
     """
 
-    description = 'Initializes Leiden Univ marker device - Markers plugin ' + markers_version_info.version
-
+    description = 'Initializes Leiden Univ marker device - Markers plugin for OpenSesame 4'
 
     def reset(self):
         """
