@@ -187,6 +187,7 @@ class MarkersInit(Item):
 
         # Add cleanup function:
         self.experiment.cleanup_functions.append(self.cleanup)
+        self.experiment.var.marker_device_used = True
 
         self.set_item_onset()
 
