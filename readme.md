@@ -18,11 +18,11 @@ These installation instructions will install the Markers plugin in the Users fol
 
 - The Markers items should now be visible in the Items Toolbar:
 
-    ![markers_init](/opensesame4_plugins/markers_init/markers_init_large.png)
-    ![markers_send](/opensesame4_plugins/markers_send/markers_send_large.png)
+    ![markers_init](/opensesame_plugins/markers/markers_init/markers_init_large.png)
+    ![markers_send](/opensesame_plugins/markers/markers_send/markers_send_large.png)
 
 ## How to use
-Help and instructions on how to use the plugin can be found [here](https://github.com/solo-fsw/opensesame4_plugin_markers/blob/main/opensesame_plugins/markers_init/markers_init.md) and in OpenSesame it can be found after inserting a markers item in your experiment by clicking on the blue questionmark in the upper right corner of the markers item tab. ![image](https://user-images.githubusercontent.com/56065641/217841460-634aee68-7b98-4154-8275-ac75337788e7.png).
+Help and instructions on how to use the plugin can be found [here](/opensesame_plugins/markers/markers_init/markers_init.md) and in OpenSesame it can be found after inserting a markers item in your experiment by clicking on the blue questionmark in the upper right corner of the markers item tab. ![image](https://user-images.githubusercontent.com/56065641/217841460-634aee68-7b98-4154-8275-ac75337788e7.png).
 
 In the samples folder a sample task can be found, which can also be downloaded [here](https://downgit.github.io/#/home?url=https://github.com/solo-fsw/opensesame4_plugin_markers/tree/main/samples) (download starts immediately using DownGit).
 
