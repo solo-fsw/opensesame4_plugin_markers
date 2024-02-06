@@ -13,7 +13,7 @@ import sys
 import re
 import os
 import pandas
-
+import time
 
 class MarkersSend(Item):
     """
@@ -46,17 +46,23 @@ class MarkersSend(Item):
         return self.var.marker_reset_to_zero == u'yes'    
 
     def is_already_init(self):
-        if (hasattr(self.experiment, "marker_managers") and 
-            self.get_tag() in self.experiment.marker_managers):
+        if (hasattr(self.experiment.python_workspace, "marker_managers") and 
+            self.get_tag() in self.experiment.python_workspace.marker_managers):
             return True
         else:
             return False
 
     def get_marker_manager(self):
         if self.is_already_init():
-            return self.experiment.marker_managers.get(self.get_tag())
+            return self.experiment.python_workspace.marker_managers.get(self.get_tag())
         else:
             return None
+        
+    def set_marker_tables(self, marker_table, summary_table, error_table):
+        self.experiment.python_workspace[f'markers_marker_table_{self.get_tag()}'] = marker_table
+        self.experiment.python_workspace[f'markers_summary_table_{self.get_tag()}'] = summary_table
+        self.experiment.python_workspace[f'markers_error_table_{self.get_tag()}'] = error_table
+
 
     def prepare(self):
 
@@ -90,6 +96,8 @@ class MarkersSend(Item):
             Run phase.
         """
 
+        tic = time.perf_counter()
+
         # Check if the marker device is initialized
         if not self.is_already_init():
             raise osexception("You must have a markers_init item before sending markers."
@@ -110,7 +118,7 @@ class MarkersSend(Item):
                 self.get_marker_manager().set_value(0)
             except:
                 raise osexception(f"Error sending marker with value 0: {sys.exc_info()[1]}")
-
+            
         self.set_item_onset()
         
 

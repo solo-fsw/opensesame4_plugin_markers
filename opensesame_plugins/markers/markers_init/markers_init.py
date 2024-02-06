@@ -69,8 +69,8 @@ class MarkersInit(Item):
 
 
     def is_already_init(self):
-        if (hasattr(self.experiment, "marker_managers") and 
-            self.get_tag_gui() in self.experiment.marker_managers):
+        if (hasattr(self.experiment.python_workspace, "marker_managers") and 
+            self.get_tag_gui() in self.experiment.python_workspace.marker_managers):
             return True
         else:
             return False
@@ -78,13 +78,13 @@ class MarkersInit(Item):
     def set_marker_manager(self, mark_man):
 
         if not hasattr(self.experiment, "marker_managers"):
-            self.experiment.marker_managers = dict()
+            self.experiment.python_workspace.marker_managers = dict()
 
-        self.experiment.marker_managers[self.get_tag_gui()] = mark_man
+        self.experiment.python_workspace.marker_managers[self.get_tag_gui()] = mark_man
 
     def get_marker_manager(self):
         if self.is_already_init():
-            return self.experiment.marker_managers.get(self.get_tag_gui())
+            return self.experiment.python_workspace.marker_managers.get(self.get_tag_gui())
         else:
             return None
         
@@ -97,7 +97,6 @@ class MarkersInit(Item):
 
     def set_marker_prop_var(self, marker_prop):
         # Save in var and in python_workspace
-        print(marker_prop)
         for prop in marker_prop:
             setattr(self.experiment.var, f"markers_{prop}_{self.get_tag_gui()}", marker_prop[prop])
 
@@ -185,7 +184,15 @@ class MarkersInit(Item):
         marker_manager.set_value(0)
         self.clock.sleep(pulse_dur)
 
+        # Initiate marker tables and save
+        marker_df, summary_df, error_df = self.get_marker_manager().gen_marker_table()
+        self.set_marker_tables(marker_df, summary_df, error_df)        
+
         # Add cleanup function:
+        """Clean-up functions are executed at the very end, after the display,
+        sound device, and log file have been closed. Clean-up functions are also
+        executed when the experiment crashes.
+        """
         self.experiment.cleanup_functions.append(self.cleanup)
         self.experiment.var.marker_device_used = True
 
@@ -196,7 +203,10 @@ class MarkersInit(Item):
 
         # Reset value:
         self.get_marker_manager().set_value(0)
-        self.clock.sleep(100)
+
+        # Get marker tables and save
+        marker_df, summary_df, error_df = self.get_marker_manager().gen_marker_table()
+        self.set_marker_tables(marker_df, summary_df, error_df)
 
         # Generate and save marker file in same location as the logfile
         if self.var.marker_gen_mark_file == u'yes':
@@ -210,13 +220,8 @@ class MarkersInit(Item):
             except:
                 print("WARNING: Could not save marker file.")
 
-
         # Close marker device:
         self.close()
-
-        # Get marker tables and save
-        marker_df, summary_df, error_df = self.get_marker_manager().gen_marker_table()
-        self.set_marker_tables(marker_df, summary_df, error_df)
 
     def close(self):
 
