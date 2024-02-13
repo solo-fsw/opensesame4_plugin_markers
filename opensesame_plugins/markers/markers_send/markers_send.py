@@ -8,11 +8,8 @@ from libopensesame.py3compat import *
 from libopensesame.item import Item
 from libqtopensesame.items.qtautoplugin import QtAutoPlugin
 from libopensesame.exceptions import osexception
-import serial
 import sys
 import re
-import os
-import pandas
 import time
 
 class MarkersSend(Item):
@@ -33,35 +30,30 @@ class MarkersSend(Item):
         self.var.marker_object_duration = 0
         self.var.marker_reset_to_zero = 'no'
 
-    def get_tag(self):
+    def get_tag_gui(self):
         return self.var.marker_device_tag
 
-    def get_value(self):
+    def get_value_gui(self):
         return self.var.marker_value
     
-    def get_duration(self):
+    def get_duration_gui(self):
         return self.var.marker_object_duration
     
-    def get_reset_to_zero(self):
+    def get_reset_to_zero_gui(self):
         return self.var.marker_reset_to_zero == u'yes'    
 
     def is_already_init(self):
         if (hasattr(self.experiment.python_workspace, "marker_managers") and 
-            self.get_tag() in self.experiment.python_workspace.marker_managers):
+            self.get_tag_gui() in self.experiment.python_workspace.marker_managers):
             return True
         else:
             return False
 
     def get_marker_manager(self):
         if self.is_already_init():
-            return self.experiment.python_workspace.marker_managers.get(self.get_tag())
+            return self.experiment.python_workspace.marker_managers.get(self.get_tag_gui())
         else:
             return None
-        
-    def set_marker_tables(self, marker_table, summary_table, error_table):
-        self.experiment.python_workspace[f'markers_marker_table_{self.get_tag()}'] = marker_table
-        self.experiment.python_workspace[f'markers_summary_table_{self.get_tag()}'] = summary_table
-        self.experiment.python_workspace[f'markers_error_table_{self.get_tag()}'] = error_table
 
 
     def prepare(self):
@@ -71,22 +63,18 @@ class MarkersSend(Item):
             Prepare phase.
         """
 
-        # Check input of plugin:
-        device_tag = self.get_tag()
+        # Check input of plugin (only tag and duration, the value is checked by marker_manager):
+        device_tag = self.get_tag_gui()
         if not(bool(re.match("^[A-Za-z0-9_-]*$", device_tag)) and bool(re.match("^[A-Za-z]*$", device_tag[0]))):
-            # Raise error, tag can only contain: letters, numbers, underscores and dashes and should start with letter.
             raise osexception("Device tag can only contain letters, numbers, underscores and dashes "
                               "and should start with a letter.")
         
-        # Marker value is checked by marker_management
-
-        # Check Marker duration
-        if not(isinstance(self.get_duration(), int) and not(isinstance(self.get_duration(), float))):
+        if not(isinstance(self.get_duration_gui(), int) and not(isinstance(self.get_duration_gui(), float))):
             raise osexception("Object duration should be numeric")
-        elif self.get_duration() < 0:
+        elif self.get_duration_gui() < 0:
             raise osexception("Object duration must be a positive number")
 
-        # Call the parent constructor.
+        # Call the parent constructor
         Item.prepare(self)
 
     def run(self):
@@ -96,24 +84,22 @@ class MarkersSend(Item):
             Run phase.
         """
 
-        tic = time.perf_counter()
-
         # Check if the marker device is initialized
         if not self.is_already_init():
             raise osexception("You must have a markers_init item before sending markers."
                               " Make sure the Device tags match.")
 
+        # Send marker
         try:
-            self.get_marker_manager().set_value(int(self.get_value()))
+            self.get_marker_manager().set_value(int(self.get_value_gui()))
         except:
-            raise osexception(f"Error sending marker with value {self.get_value()}: {sys.exc_info()[1]}")
+            raise osexception(f"Error sending marker with value {self.get_value_gui()}: {sys.exc_info()[1]}")
 
         # Sleep for object duration (blocking)
-        self.clock.sleep(int(self.get_duration()))
+        self.clock.sleep(int(self.get_duration_gui()))
 
         # Reset marker value to zero, if specified
-        if self.get_duration() > 5 and self.get_reset_to_zero():
-
+        if self.get_reset_to_zero_gui():
             try:
                 self.get_marker_manager().set_value(0)
             except:

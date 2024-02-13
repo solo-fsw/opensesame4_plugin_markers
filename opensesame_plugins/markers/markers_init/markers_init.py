@@ -9,11 +9,9 @@ from libopensesame.py3compat import *
 from libopensesame.item import Item
 from libqtopensesame.items.qtautoplugin import QtAutoPlugin
 from libopensesame.exceptions import osexception
-import serial
 import sys
 import re
 import os
-import pandas
 
 from python_markers import marker_management as mark
 
@@ -67,7 +65,6 @@ class MarkersInit(Item):
         return self.var.marker_crash_on_mark_errors == u'yes'
     
 
-
     def is_already_init(self):
         if (hasattr(self.experiment.python_workspace, "marker_managers") and 
             self.get_tag_gui() in self.experiment.python_workspace.marker_managers):
@@ -76,10 +73,8 @@ class MarkersInit(Item):
             return False
         
     def set_marker_manager(self, mark_man):
-
         if not hasattr(self.experiment, "marker_managers"):
             self.experiment.python_workspace.marker_managers = dict()
-
         self.experiment.python_workspace.marker_managers[self.get_tag_gui()] = mark_man
 
     def get_marker_manager(self):
@@ -89,26 +84,24 @@ class MarkersInit(Item):
             return None
         
     def set_marker_manager_tag(self):
-
         if not 'markers_tags' in self.experiment.python_workspace:
             self.experiment.python_workspace['markers_tags'] = list()
-
         self.experiment.python_workspace['markers_tags'].append(self.get_tag_gui())
 
-    def set_marker_prop_var(self, marker_prop):
-        # Save in var and in python_workspace
+    def set_marker_prop(self, marker_prop):
+        # Save in var (so that it is logged) and in python_workspace
         for prop in marker_prop:
             setattr(self.experiment.var, f"markers_{prop}_{self.get_tag_gui()}", marker_prop[prop])
-
         self.experiment.python_workspace[f'markers_prop_{self.get_tag_gui()}'] = marker_prop
 
-    def get_marker_prop_var(self, prop):
+    def get_marker_prop(self, prop):
         try:
             return getattr(self.experiment.var, f"markers_{prop}_{self.get_tag_gui()}")
         except:
             return None
     
-    def set_marker_tables(self, marker_table, summary_table, error_table):
+    def set_marker_tables(self):
+        marker_table, summary_table, error_table = self.get_marker_manager().gen_marker_table()
         self.experiment.python_workspace[f'markers_marker_table_{self.get_tag_gui()}'] = marker_table
         self.experiment.python_workspace[f'markers_summary_table_{self.get_tag_gui()}'] = summary_table
         self.experiment.python_workspace[f'markers_error_table_{self.get_tag_gui()}'] = error_table
@@ -124,14 +117,12 @@ class MarkersInit(Item):
         # Check input of plugin:
         device_tag = self.get_tag_gui()
         if not(bool(re.match("^[A-Za-z0-9_-]*$", device_tag)) and bool(re.match("^[A-Za-z]*$", device_tag[0]))):
-            # Raise error, tag can only contain: letters, numbers, underscores and dashes and should start with letter.
             raise osexception(f"Incorrect device tag: {device_tag}. "
                               "Device tag can only contain letters, numbers, underscores and dashes "
                               "and should start with a letter.")
 
         device_address = self.get_addr_gui()
         if device_address != u'ANY' and re.match("^COM\d{1,3}", str(device_address)) is None:
-            # Raise error when marker address is not a proper COM address.
             raise osexception(f"Incorrect marker device address: {device_address}")
 
         # Get com port and device info:
@@ -139,7 +130,7 @@ class MarkersInit(Item):
 
         # Save com port in device and save all device info
         info['device']['ComPort'] = info['com_port']
-        self.set_marker_prop_var(info['device'])
+        self.set_marker_prop(info['device'])
 
 
         # Call the parent constructor
@@ -152,14 +143,12 @@ class MarkersInit(Item):
             Run phase.
         """
 
-        # Save marker_manager tag
         self.set_marker_manager_tag()
 
-        device = self.get_marker_prop_var('Device')
-        com_port = self.get_marker_prop_var('ComPort')
+        device = self.get_marker_prop('Device')
+        com_port = self.get_marker_prop('ComPort')
 
         if self.is_already_init():
-            # Raise error since you cannot init twice.
             raise osexception("Marker device already initialized.")
 
 
@@ -180,20 +169,16 @@ class MarkersInit(Item):
             marker_manager.set_value(255)
             self.clock.sleep(pulse_dur)
 
-        # Reset:
+        # Reset value
         marker_manager.set_value(0)
         self.clock.sleep(pulse_dur)
 
-        # Initiate marker tables and save
-        marker_df, summary_df, error_df = self.get_marker_manager().gen_marker_table()
-        self.set_marker_tables(marker_df, summary_df, error_df)        
+        # Save marker tables
+        self.set_marker_tables()        
 
         # Add cleanup function:
-        """Clean-up functions are executed at the very end, after the display,
-        sound device, and log file have been closed. Clean-up functions are also
-        executed when the experiment crashes.
-        """
         self.experiment.cleanup_functions.append(self.cleanup)
+
         self.experiment.var.marker_device_used = True
 
         self.set_item_onset()
@@ -201,12 +186,11 @@ class MarkersInit(Item):
 
     def cleanup(self):
 
-        # Reset value:
+        # Reset value
         self.get_marker_manager().set_value(0)
 
-        # Get marker tables and save
-        marker_df, summary_df, error_df = self.get_marker_manager().gen_marker_table()
-        self.set_marker_tables(marker_df, summary_df, error_df)
+        # Save marker tables
+        self.set_marker_tables()
 
         # Generate and save marker file in same location as the logfile
         if self.var.marker_gen_mark_file == u'yes':

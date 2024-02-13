@@ -5,14 +5,10 @@ OpenSesame extension for creating a tab with the marker tables after the experim
 """
 
 import time
-import os
-import json
 from libopensesame.py3compat import *
 from libopensesame.exceptions import UserAborted 
 from libqtopensesame.extensions import BaseExtension
 from libopensesame import misc
-import markdown
-import pandas
 import sys
 
 
@@ -35,11 +31,7 @@ class MarkersExtension(BaseExtension):
 				type:	[Exception, NoneType]
 		"""
 
-		if ret_val is None:
-			self.print_markers()
-		else:
-			time.sleep(5)
-			self.print_markers()
+		self.print_markers()
 
 	def print_markers(self):
 
@@ -48,59 +40,37 @@ class MarkersExtension(BaseExtension):
 			Prints marker tables in md file that is shown in tab after the experiment.
 		"""
 
-		try:
+		var = self.extension_manager.provide(
+			'jupyter_workspace_variable',
+			name='var'
+		)
+		
+		if hasattr(var, 'marker_device_used'):
 
-			var = self.extension_manager.provide(
-				'jupyter_workspace_variable',
-				name='var'
-			)
-
-			if hasattr(var, 'marker_device_used'):
+			try:
 
 				marker_tags = self.extension_manager.provide(
 					'jupyter_workspace_variable',
 					name='markers_tags'
 				)
 
+				# Init markdown
+				md = u'Time: ' + str(time.ctime()) + u'\n\n'
 
-				"""
-				Tried to get marker_managers, but doesn't work
-
-				marker_managers = self.extension_manager.provide(
-					'jupyter_workspace_variable', 
-					name='marker_managers'
-				)
-				"""
-
-				# Init markdown, 
-				md = ''
-
-				# print basic header info
-				md += u'Time: ' + str(time.ctime()) + u'\n\n'
-
-				# Append marker tables of each marker device:
 				for tag in marker_tags:
 
-					# Print tag
+					# Add tag
 					md += u'#' + str(tag) + u'\n'
 
-					# Get and print marker device properties
+					# Add marker device properties
 					cur_marker_props = self.extension_manager.provide(
 						'jupyter_workspace_variable',
 						name=f"markers_prop_{tag}"
 					)	
-					
-					"""
-					# Get marker tables
-					cur_marker_manager = marker_managers.get(tag)
-					marker_df, summary_df, error_df = cur_marker_manager.gen_marker_table()
-
-					"""	
 
 					for marker_prop in cur_marker_props:
 						md += u'- ' + str(marker_prop) + u': ' + str(cur_marker_props[marker_prop]) + u'\n'
 
-					
 					# Get marker tables
 					summary_df = self.extension_manager.provide(
 						'jupyter_workspace_variable',
@@ -117,22 +87,21 @@ class MarkersExtension(BaseExtension):
 						name=f"markers_error_table_{tag}"
 					)	
 
-
-					# Add summary table to md
+					# Add summary table
 					summary_df = summary_df.round(decimals=3)
 					md = add_table_to_md(md, summary_df, 'Summary table')
 
 					if summary_df.empty:
 						md += u'No markers were sent, summary table empty\n\n'
 
-					# Add marker table to md
+					# Add marker table
 					marker_df = marker_df.round(decimals=3)
 					md = add_table_to_md(md, marker_df, 'Marker table')
 
 					if marker_df.empty:
 						md += u'No markers were sent, marker table empty\n\n'
 
-					# Add error table to md
+					# Add error table
 					md = add_table_to_md(md, error_df, 'Error table')
 
 					if error_df.empty:
@@ -141,41 +110,12 @@ class MarkersExtension(BaseExtension):
 				# Open the tab
 				self.tabwidget.open_markdown(md, u'os-finished-success', u'Marker tables')
 
-		# Occasionally, something goes wrong getting the marker tables
-		except:
+			# Occasionally, something goes wrong getting the marker tables
+			except:
 
-			md += f'\n\nError: {sys.exc_info()[1]}'
-			md += u'\n\nSomething went wrong while generating the marker tables. This can happen when the experiment is aborted or the experiment crashed.'
-			self.tabwidget.open_markdown(md, u'os-finished-user-interrupt', u'Marker tables')
-
-	def handle_exception(self, e):	
-		"""
-		When an exception occured or when the experiment was aborted, the marker
-		tables cannot be shown. 
-
-        Parameters
-        ----------
-        e : Exception
-            The Exception that caused the experiment to stop.
-        """
-
-		# Init markdown, 
-		md = ''
-
-		# print basic header info
-		md += u'Time: ' + str(time.ctime()) + u'\n\n'	
-		md += u'#' + 'Marker table error'+ u'\n'	
-
-		if isinstance(e, UserAborted):
-			md += u'Marker tables could not be printed, because the experiment was aborted.\n\n'
-			
-		else:
-			md += u'Marker tables could not be printed, because an error occurred.\n\n'
-
-		md += u'Check the marker file (.tsv) for an overview of markers that were sent. Make sure **Generate marker file** in the **markers_init** item is checked.'
-
-		# Open the tab
-		self.tabwidget.open_markdown(md, u'os-finished-error', u'Marker tables')		
+				md += f'\n\nError: {sys.exc_info()[1]}'
+				md += u'\n\nSomething went wrong while generating the marker tables. This can happen when the experiment crashed.'
+				self.tabwidget.open_markdown(md, u'os-finished-user-interrupt', u'Marker tables')	
 			
 
 def add_table_to_md(md, df, table_title):

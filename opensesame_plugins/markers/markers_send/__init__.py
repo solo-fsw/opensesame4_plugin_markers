@@ -28,7 +28,7 @@ controls = [
         "var": "marker_reset_to_zero",
         "label": "Reset marker value to zero",
         "name": "marker_reset_to_zero_widget",
-        "info": "When checked, the marker value will reset to zero after the Object duration (duration must be > 5 ms)."
+        "info": "When checked, the marker value will reset to zero after the Object duration."
     }
 
 ]
