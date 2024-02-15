@@ -31,9 +31,9 @@ class MarkersExtension(BaseExtension):
 				type:	[Exception, NoneType]
 		"""
 
-		self.print_markers()
+		self.print_markers(ret_val)
 
-	def print_markers(self):
+	def print_markers(self, e):
 
 		"""
 		desc:
@@ -56,6 +56,13 @@ class MarkersExtension(BaseExtension):
 
 				# Init markdown
 				md = u'Time: ' + str(time.ctime()) + u'\n\n'
+
+				if e is None:
+					md += u'The experiment finished succesfully.\n\n'
+				elif isinstance(e, UserAborted):
+					md += u'**The experiment was aborted.**\n\n The marker tables show the markers that were sent until the experiment was aborted.\n\n'
+				else:
+					md += u'**An error occured:**\n\n' + str(e) + '\n The marker tables show the markers that were sent until the experiment crashed.\n\n'
 
 				for tag in marker_tags:
 
@@ -107,15 +114,19 @@ class MarkersExtension(BaseExtension):
 					if error_df.empty:
 						md += u'No marker errors occurred, error table empty\n\n'
 
-				# Open the tab
-				self.tabwidget.open_markdown(md, u'os-finished-success', u'Marker tables')
+				# Show markers
+				if e is None:
+					self.tabwidget.open_markdown(md, u'os-finished-success', u'Marker tables')
+				else:
+					self.tabwidget.open_markdown(md, u'os-finished-error', u'Marker tables')
+
 
 			# Occasionally, something goes wrong getting the marker tables
 			except:
 
 				md += f'\n\nError: {sys.exc_info()[1]}'
 				md += u'\n\nSomething went wrong while generating the marker tables. This can happen when the experiment crashed.'
-				self.tabwidget.open_markdown(md, u'os-finished-user-interrupt', u'Marker tables')	
+				self.tabwidget.open_markdown(md, u'os-finished-user-error', u'Marker tables')	
 			
 
 def add_table_to_md(md, df, table_title):
