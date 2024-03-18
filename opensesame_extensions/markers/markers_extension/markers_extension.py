@@ -62,7 +62,9 @@ class MarkersExtension(BaseExtension):
 				elif isinstance(e, UserAborted):
 					md += u'**The experiment was aborted.**\n\n The marker tables show the markers that were sent until the experiment was aborted.\n\n'
 				else:
-					md += u'**An error occured:**\n\n' + str(e) + '\n The marker tables show the markers that were sent until the experiment crashed.\n\n'
+					md += u'**An error occured:**\n\n' + str(e) + '\n\n Could not show marker tables.\n\n'
+					self.tabwidget.open_markdown(md, u'os-finished-error', u'Marker tables')
+					return
 
 				for tag in marker_tags:
 
@@ -126,7 +128,7 @@ class MarkersExtension(BaseExtension):
 
 				md += f'\n\nError: {sys.exc_info()[1]}'
 				md += u'\n\nSomething went wrong while generating the marker tables. This can happen when the experiment crashed.'
-				self.tabwidget.open_markdown(md, u'os-finished-user-error', u'Marker tables')	
+				self.tabwidget.open_markdown(md, u'os-finished-error', u'Marker tables')	
 			
 
 def add_table_to_md(md, df, table_title):
