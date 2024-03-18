@@ -73,7 +73,7 @@ class MarkersInit(Item):
             return False
         
     def set_marker_manager(self, mark_man):
-        if not hasattr(self.experiment, "marker_managers"):
+        if not hasattr(self.experiment.python_workspace, "marker_managers"):
             self.experiment.python_workspace.marker_managers = dict()
         self.experiment.python_workspace.marker_managers[self.get_tag_gui()] = mark_man
 
