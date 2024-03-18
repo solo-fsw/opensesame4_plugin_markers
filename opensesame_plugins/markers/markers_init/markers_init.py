@@ -102,7 +102,6 @@ class MarkersInit(Item):
     
     def set_marker_tables(self):
         marker_table, summary_table, error_table = self.get_marker_manager().gen_marker_table()
-        print(marker_table)
         self.experiment.python_workspace[f'markers_marker_table_{self.get_tag_gui()}'] = marker_table
         self.experiment.python_workspace[f'markers_summary_table_{self.get_tag_gui()}'] = summary_table
         self.experiment.python_workspace[f'markers_error_table_{self.get_tag_gui()}'] = error_table
