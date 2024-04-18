@@ -5,19 +5,14 @@ OpenSesame extension for creating a tab with the marker tables after the experim
 """
 
 import time
-import os
-import json
 from libopensesame.py3compat import *
-from libopensesame.exceptions import osexception
-from libqtopensesame.extensions import base_extension
+from libopensesame.exceptions import UserAborted 
+from libqtopensesame.extensions import BaseExtension
 from libopensesame import misc
-from libqtopensesame.misc.translate import translation_context
-import markdown
-import pandas
 import sys
 
 
-class markers_extension(base_extension):
+class MarkersExtension(BaseExtension):
 
 	"""
 	desc:
@@ -36,77 +31,104 @@ class markers_extension(base_extension):
 				type:	[Exception, NoneType]
 		"""
 
-		if ret_val is None:
-			self.print_markers()
-		else:
-			self.print_markers()
+		self.print_markers(ret_val)
 
-	def print_markers(self):
+	def print_markers(self, e):
 
 		"""
 		desc:
 			Prints marker tables in md file that is shown in tab after the experiment.
 		"""
 
-		try:
-			var = self.extension_manager.provide(
-				'jupyter_workspace_variable',
-				name='var'
-			)
+		var = self.extension_manager.provide(
+			'jupyter_workspace_variable',
+			name='var'
+		)
+		
+		if hasattr(var, 'marker_device_used'):
 
-			if hasattr(var, 'markers_tags'):
+			try:
 
-				# Get tag(s) of marker device(s)
-				marker_tags = var.markers_tags
+				marker_tags = self.extension_manager.provide(
+					'jupyter_workspace_variable',
+					name='markers_tags'
+				)
 
-				# Init markdown, print basic header info
-				md = ''
-				md += u'Time: ' + str(time.ctime()) + u'\n\n'
+				# Init markdown
+				md = u'Time: ' + str(time.ctime()) + u'\n\n'
 
-				# Append marker tables of each marker device:
+				if e is None:
+					md += u'The experiment finished succesfully.\n\n'
+				elif isinstance(e, UserAborted):
+					md += u'**The experiment was aborted.**\n\n The marker tables show the markers that were sent until the experiment was aborted.\n\n'
+				else:
+					md += u'**An error occured:**\n\n' + str(e) + '\n\n Could not show marker tables.\n\n'
+					self.tabwidget.open_markdown(md, u'os-finished-error', u'Marker tables')
+					return
+
 				for tag in marker_tags:
 
-					# Print marker device properties
+					# Add tag
 					md += u'#' + str(tag) + u'\n'
-					cur_marker_props = getattr(var, f"markers_prop_{tag}")
+
+					# Add marker device properties
+					cur_marker_props = self.extension_manager.provide(
+						'jupyter_workspace_variable',
+						name=f"markers_prop_{tag}"
+					)	
 
 					for marker_prop in cur_marker_props:
 						md += u'- ' + str(marker_prop) + u': ' + str(cur_marker_props[marker_prop]) + u'\n'
 
 					# Get marker tables
-					marker_df = getattr(var, f"markers_marker_table_{tag}")
-					summary_df = getattr(var, f"markers_summary_table_{tag}")
-					error_df = getattr(var, f"markers_error_table_{tag}")
+					summary_df = self.extension_manager.provide(
+						'jupyter_workspace_variable',
+						name=f"markers_summary_table_{tag}"
+					)
 
-					# Add summary table to md
+					marker_df = self.extension_manager.provide(
+						'jupyter_workspace_variable',
+						name=f"markers_marker_table_{tag}"
+					)
+
+					error_df = self.extension_manager.provide(
+						'jupyter_workspace_variable',
+						name=f"markers_error_table_{tag}"
+					)	
+
+					# Add summary table
 					summary_df = summary_df.round(decimals=3)
 					md = add_table_to_md(md, summary_df, 'Summary table')
 
 					if summary_df.empty:
 						md += u'No markers were sent, summary table empty\n\n'
 
-					# Add marker table to md
+					# Add marker table
 					marker_df = marker_df.round(decimals=3)
 					md = add_table_to_md(md, marker_df, 'Marker table')
 
 					if marker_df.empty:
 						md += u'No markers were sent, marker table empty\n\n'
 
-					# Add error table to md
+					# Add error table
 					md = add_table_to_md(md, error_df, 'Error table')
 
 					if error_df.empty:
 						md += u'No marker errors occurred, error table empty\n\n'
 
-				# Open the tab
-				self.tabwidget.open_markdown(md, u'os-finished-success', u'Marker tables')
+				# Show markers
+				if e is None:
+					self.tabwidget.open_markdown(md, u'os-finished-success', u'Marker tables')
+				else:
+					self.tabwidget.open_markdown(md, u'os-finished-error', u'Marker tables')
 
-		# Occasionally, something goes wrong getting the marker tables
-		except:
 
-			md += f'\n\nError: {sys.exc_info()[1]}'
-			md += u'\n\nSomething went wrong while generating the marker tables. This can happen when the experiment is aborted or the experiment crashed.'
-			self.tabwidget.open_markdown(md, u'os-finished-user-interrupt', u'Marker tables')
+			# Occasionally, something goes wrong getting the marker tables
+			except:
+
+				md += f'\n\nError: {sys.exc_info()[1]}'
+				md += u'\n\nSomething went wrong while generating the marker tables. This can happen when the experiment crashed.'
+				self.tabwidget.open_markdown(md, u'os-finished-error', u'Marker tables')	
 			
 
 def add_table_to_md(md, df, table_title):

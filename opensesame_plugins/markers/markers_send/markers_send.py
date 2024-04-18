@@ -5,25 +5,19 @@ OpenSesame plugin for sending markers to Leiden Univ Marker device.
 """
 
 from libopensesame.py3compat import *
-from libopensesame.item import item
-from libqtopensesame.items.qtautoplugin import qtautoplugin
+from libopensesame.item import Item
+from libqtopensesame.items.qtautoplugin import QtAutoPlugin
 from libopensesame.exceptions import osexception
-import serial
 import sys
 import re
-import os
-import pandas
+import time
 
-import version_info
-
-
-class markers_send(item):
+class MarkersSend(Item):
     """
     This class handles the basic functionality of the item.
     """
 
-    version = version_info.version
-    description = 'Sends marker to Leiden Univ marker device - Markers plugin ' + version
+    description = 'Sends marker to Leiden Univ marker device - Markers plugin for OpenSesame 4'
 
     def reset(self):
 
@@ -36,29 +30,31 @@ class markers_send(item):
         self.var.marker_object_duration = 0
         self.var.marker_reset_to_zero = 'no'
 
-    def get_tag(self):
+    def get_tag_gui(self):
         return self.var.marker_device_tag
 
-    def get_value(self):
+    def get_value_gui(self):
         return self.var.marker_value
     
-    def get_duration(self):
+    def get_duration_gui(self):
         return self.var.marker_object_duration
     
-    def get_reset_to_zero(self):
+    def get_reset_to_zero_gui(self):
         return self.var.marker_reset_to_zero == u'yes'    
 
     def is_already_init(self):
-        try:
-            return hasattr(self.experiment, f"markers_{self.get_tag()}")
-        except:
+        if (hasattr(self.experiment.python_workspace, "marker_managers") and 
+            self.get_tag_gui() in self.experiment.python_workspace.marker_managers):
+            return True
+        else:
             return False
 
     def get_marker_manager(self):
         if self.is_already_init():
-            return getattr(self.experiment, f"markers_{self.get_tag()}")
+            return self.experiment.python_workspace.marker_managers.get(self.get_tag_gui())
         else:
             return None
+
 
     def prepare(self):
 
@@ -67,23 +63,19 @@ class markers_send(item):
             Prepare phase.
         """
 
-        # Check input of plugin:
-        device_tag = self.get_tag()
+        # Check input of plugin (only tag and duration, the value is checked by marker_manager):
+        device_tag = self.get_tag_gui()
         if not(bool(re.match("^[A-Za-z0-9_-]*$", device_tag)) and bool(re.match("^[A-Za-z]*$", device_tag[0]))):
-            # Raise error, tag can only contain: letters, numbers, underscores and dashes and should start with letter.
             raise osexception("Device tag can only contain letters, numbers, underscores and dashes "
                               "and should start with a letter.")
         
-        # Marker value is checked by marker_management
-
-        # Check Marker duration
-        if not(isinstance(self.get_duration(), int) and not(isinstance(self.get_duration(), float))):
+        if not(isinstance(self.get_duration_gui(), int) and not(isinstance(self.get_duration_gui(), float))):
             raise osexception("Object duration should be numeric")
-        elif self.get_duration() < 0:
+        elif self.get_duration_gui() < 0:
             raise osexception("Object duration must be a positive number")
 
-        # Call the parent constructor.
-        item.prepare(self)
+        # Call the parent constructor
+        Item.prepare(self)
 
     def run(self):
 
@@ -97,27 +89,26 @@ class markers_send(item):
             raise osexception("You must have a markers_init item before sending markers."
                               " Make sure the Device tags match.")
 
-        # Send marker:
+        # Send marker
         try:
-            self.get_marker_manager().set_value(int(self.get_value()))
+            self.get_marker_manager().set_value(int(self.get_value_gui()))
         except:
-            raise osexception(f"Error sending marker with value {self.get_value()}: {sys.exc_info()[1]}")
+            raise osexception(f"Error sending marker with value {self.get_value_gui()}: {sys.exc_info()[1]}")
 
         # Sleep for object duration (blocking)
-        self.sleep(int(self.get_duration()))
+        self.clock.sleep(int(self.get_duration_gui()))
 
         # Reset marker value to zero, if specified
-        if self.get_duration() > 5 and self.get_reset_to_zero():
-
+        if self.get_reset_to_zero_gui():
             try:
                 self.get_marker_manager().set_value(0)
             except:
                 raise osexception(f"Error sending marker with value 0: {sys.exc_info()[1]}")
-
+            
         self.set_item_onset()
         
 
-class qtmarkers_send(markers_send, qtautoplugin):
+class qtmarkers_send(MarkersSend, QtAutoPlugin):
     """
     This class handles the GUI aspect of the plug-in. By using qtautoplugin, we
     usually need to do hardly anything, because the GUI is defined in info.json.
@@ -137,8 +128,8 @@ class qtmarkers_send(markers_send, qtautoplugin):
         """
 
         # Call the parent constructors.
-        markers_send.__init__(self, name, experiment, script)
-        qtautoplugin.__init__(self, __file__)
+        MarkersSend.__init__(self, name, experiment, script)
+        QtAutoPlugin.__init__(self, __file__)
 
     def init_edit_widget(self):
 
@@ -151,7 +142,7 @@ class qtmarkers_send(markers_send, qtautoplugin):
 
         # First, call the parent constructor, which constructs the GUI controls
         # based on info.json.
-        qtautoplugin.init_edit_widget(self)
+        QtAutoPlugin.init_edit_widget(self)
         self.custom_interactions()
 
     def apply_edit_changes(self):
@@ -161,7 +152,7 @@ class qtmarkers_send(markers_send, qtautoplugin):
             Applies the controls.
         """
 
-        if not qtautoplugin.apply_edit_changes(self) or self.lock:
+        if not QtAutoPlugin.apply_edit_changes(self) or self.lock:
             return False
         self.custom_interactions()
 
@@ -177,7 +168,7 @@ class qtmarkers_send(markers_send, qtautoplugin):
         if self.lock:
             return
         self.lock = True
-        w = qtautoplugin.edit_widget(self)
+        w = QtAutoPlugin.edit_widget(self)
         self.custom_interactions()
         self.lock = False
         return w
