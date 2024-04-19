@@ -1,7 +1,8 @@
 #-*- coding:utf-8 -*-
 
 """
-OpenSesame extension for creating a tab with the marker tables after the experiment is finished.
+OpenSesame 4 extension for creating a tab with the marker tables after the experiment is finished.
+Part of the markers_os4 plugin.
 """
 
 import time
@@ -12,7 +13,7 @@ from libopensesame import misc
 import sys
 
 
-class MarkersExtension(BaseExtension):
+class MarkersOs4Extension(BaseExtension):
 
 	"""
 	desc:

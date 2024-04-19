@@ -1,1 +1,0 @@
-"""This extension is part of the markers plugin and creates the markers Tab after the experiment finished."""

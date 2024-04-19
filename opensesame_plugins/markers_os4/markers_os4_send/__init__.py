@@ -1,4 +1,4 @@
-"""Plugin for sending markers to Leiden univ marker devices"""
+"""OpenSesame 4 plugin for sending markers to Leiden univ marker devices"""
 
 # The category determines the group for the plugin in the item toolbar
 category = "Flow control"
