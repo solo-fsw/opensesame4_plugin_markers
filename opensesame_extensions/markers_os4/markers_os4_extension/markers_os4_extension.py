@@ -10,6 +10,7 @@ from libopensesame.py3compat import *
 from libopensesame.exceptions import UserAborted 
 from libqtopensesame.extensions import BaseExtension
 from libopensesame import misc
+from libopensesame.plugins import list_plugins, set_plugin_property
 import sys
 
 
@@ -17,8 +18,31 @@ class MarkersOs4Extension(BaseExtension):
 
 	"""
 	desc:
-		Shows marker tables in separate tab after an experiment has finished.
+		- Disables other marker plugins.
+		- Shows marker tables in separate tab after an experiment has finished.
 	"""
+
+	def event_startup(self):
+
+		"""
+		desc:
+			Handles startup of OpenSesame: disables outdated plugins
+		"""		
+		list_old_plugins = ["markers_os3", "markers"]
+
+		'Get list of plugins and extensions'
+		plugin_list = list_plugins(filter_disabled=False)
+		extension_list = list_plugins(filter_disabled=False, _type=u'extensions')
+
+		'loop through lists and disable the old plugins and extensions'
+		for plugin_name in plugin_list:
+			if plugin_name in list_old_plugins:
+				set_plugin_property(plugin=plugin_name, property=u'disabled', value=True)
+
+		for extension_name in extension_list:
+			if extension_name in list_old_plugins:
+				set_plugin_property(plugin=extension_name, property=u'disabled', value=True)
+
 
 	def event_end_experiment(self, ret_val):
 
