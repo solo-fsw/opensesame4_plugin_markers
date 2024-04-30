@@ -46,7 +46,8 @@ class MarkersOs4Extension(BaseExtension):
 		md = u'Time: ' + str(time.ctime()) + u'\n\n'
 		md += plugin_list
 
-		self.tabwidget.open_markdown(md, u'os-finished-success', u'debugging')	
+		self.tabwidget.open_markdown(md, title=_(u'debugging'),
+                                     icon=u'document-new')		
 
 
 	def event_end_experiment(self, ret_val):
