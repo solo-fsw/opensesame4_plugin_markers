@@ -53,8 +53,7 @@ class MarkersOs4Extension(BaseExtension):
 				set_plugin_property(plugin=extension_name, property=u'disabled', value=True)
 
 		disabled_plugins = cfg[u'disabled_%s' % _type]
-		md += type(cfg)
-			
+		md += str(type(disabled_plugins))
 
 		self.tabwidget.open_markdown(md, title=_(u'debugging'),
                                      icon=u'document-new')	
