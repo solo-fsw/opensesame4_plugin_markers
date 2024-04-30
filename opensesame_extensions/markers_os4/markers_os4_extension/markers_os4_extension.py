@@ -11,6 +11,7 @@ from libopensesame.exceptions import UserAborted
 from libqtopensesame.extensions import BaseExtension
 from libopensesame import misc
 from libopensesame.plugins import list_plugins, set_plugin_property, plugin_properties
+from libqtopensesame.misc.config import cfg
 import sys
 
 
@@ -50,10 +51,13 @@ class MarkersOs4Extension(BaseExtension):
 			if extension_name in list_old_plugins:
 				md += extension_name + u'\n\n'
 				set_plugin_property(plugin=extension_name, property=u'disabled', value=True)
-		
+
+		disabled_plugins = cfg[u'disabled_%s' % _type]
+		for cur_plugin in disabled_plugins:
+			md += cur_plugin + u'\n\n'		
 
 		self.tabwidget.open_markdown(md, title=_(u'debugging'),
-                                     icon=u'document-new')		
+                                     icon=u'document-new')	
 
 
 	def event_end_experiment(self, ret_val):
