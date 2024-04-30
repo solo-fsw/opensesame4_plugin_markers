@@ -54,7 +54,7 @@ class MarkersOs4Extension(BaseExtension):
 
 		try:		
 
-			disabled_plugins = cfg[u'disabled_%s' % _type]
+			disabled_plugins = cfg[u'disabled_%s' % u'plugins']
 			md += str(type(disabled_plugins))
 			
 		except:
