@@ -28,7 +28,7 @@ class MarkersOs4Extension(BaseExtension):
 		desc:
 			Handles startup of OpenSesame: disables outdated plugins
 		"""		
-		list_old_plugins = ["markers_os3", "markers"]
+		list_old_plugins = ["markers_os3_extension", "markers_os3_init", "markers_os3_send", "markers_extension", "markers_init", "markers_send"]
 
 		'Get list of plugins and extensions'
 		plugin_list = list_plugins(filter_disabled=False)
