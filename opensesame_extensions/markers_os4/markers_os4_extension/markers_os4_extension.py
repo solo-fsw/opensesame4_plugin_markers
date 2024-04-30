@@ -28,6 +28,9 @@ class MarkersOs4Extension(BaseExtension):
 		desc:
 			Handles startup of OpenSesame: disables outdated plugins
 		"""		
+
+		md = u'Time: ' + str(time.ctime()) + u'\n\n'
+
 		list_old_plugins = ["markers_os3_extension", "markers_os3_init", "markers_os3_send", "markers_extension", "markers_init", "markers_send"]
 
 		'Get list of plugins and extensions'
@@ -37,14 +40,13 @@ class MarkersOs4Extension(BaseExtension):
 		'loop through lists and disable the old plugins and extensions'
 		for plugin_name in plugin_list:
 			if plugin_name in list_old_plugins:
+				md += plugin_name + u'\n\n'
 				set_plugin_property(plugin=plugin_name, property=u'disabled', value=True)
 
 		for extension_name in extension_list:
 			if extension_name in list_old_plugins:
+				md += extension_name + u'\n\n'
 				set_plugin_property(plugin=extension_name, property=u'disabled', value=True)
-
-		md = u'Time: ' + str(time.ctime()) + u'\n\n'
-		md += plugin_list
 
 		self.tabwidget.open_markdown(md, title=_(u'debugging'),
                                      icon=u'document-new')		
