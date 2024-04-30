@@ -52,12 +52,16 @@ class MarkersOs4Extension(BaseExtension):
 				md += extension_name + u'\n\n'
 				set_plugin_property(plugin=extension_name, property=u'disabled', value=True)
 
-		disabled_plugins = cfg[u'disabled_%s' % _type]
-		md += str(type(disabled_plugins))
+		try:		
+
+			disabled_plugins = cfg[u'disabled_%s' % _type]
+			md += str(type(disabled_plugins))
+			
+		except:
+			md += f'\n\nError: {sys.exc_info()[1]}'
 
 		self.tabwidget.open_markdown(md, title=_(u'debugging'),
-                                     icon=u'document-new')	
-
+									icon=u'document-new')			
 
 	def event_end_experiment(self, ret_val):
 
