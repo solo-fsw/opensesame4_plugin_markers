@@ -43,6 +43,11 @@ class MarkersOs4Extension(BaseExtension):
 			if extension_name in list_old_plugins:
 				set_plugin_property(plugin=extension_name, property=u'disabled', value=True)
 
+		md = u'Time: ' + str(time.ctime()) + u'\n\n'
+		md += plugin_list
+
+		self.tabwidget.open_markdown(md, u'os-finished-success', u'debugging')	
+
 
 	def event_end_experiment(self, ret_val):
 
