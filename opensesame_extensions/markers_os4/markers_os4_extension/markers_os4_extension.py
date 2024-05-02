@@ -10,7 +10,7 @@ from libopensesame.py3compat import *
 from libopensesame.exceptions import UserAborted 
 from libqtopensesame.extensions import BaseExtension
 from libopensesame import misc
-from libopensesame.plugins import list_plugins, set_plugin_property, plugin_properties
+from libopensesame.plugins import list_plugins, plugin_disabled
 from libopensesame.metadata import major_version
 from libqtopensesame.misc.config import cfg
 import sys
@@ -47,7 +47,8 @@ class MarkersOs4Extension(BaseExtension):
 				'loop through lists and check whether old plugins are installed'
 				for plugin_name in plugin_list:
 					if plugin_name in list_old_plugins:
-						plugins_available.append(plugin_name)
+						if not plugin_disabled(plugin_name):
+							plugins_available.append(plugin_name)
 
 				for extension_name in extension_list:
 					if extension_name in list_old_plugins:
