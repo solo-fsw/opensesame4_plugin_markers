@@ -11,6 +11,7 @@ from libopensesame.exceptions import UserAborted
 from libqtopensesame.extensions import BaseExtension
 from libopensesame import misc
 from libopensesame.plugins import list_plugins, set_plugin_property, plugin_properties
+from libopensesame.metadata import main_version, major_version, strict_version, deb_version
 from libqtopensesame.misc.config import cfg
 import sys
 
@@ -32,30 +33,38 @@ class MarkersOs4Extension(BaseExtension):
 
 		md = u'Time: ' + str(time.ctime()) + u'\n\n'
 
-		list_old_plugins = ["markers_os3_extension", "markers_os3_init", "markers_os3_send", "markers_extension", "markers_init", "markers_send"]
+		try:	
 
-		'Get list of plugins and extensions'
-		plugin_list = list_plugins(filter_disabled=False)
-		extension_list = list_plugins(filter_disabled=False, _type=u'extensions')
+			md += u'Major version: ' + major_version + u'\n\n'
+			md += u'Main version: ' + main_version + u'\n\n'
+			md += u'Strict version: ' + strict_version + u'\n\n'
+			md += u'Deb version: ' + deb_version + u'\n\n'
 
-		'loop through lists and disable the old plugins and extensions'
-		for plugin_name in plugin_list:
-			if plugin_name in list_old_plugins:
-				md += plugin_name + u'\n\n'
-				cur_prop = plugin_properties(plugin=plugin_name)
-				for prop in cur_prop:
-					md += prop + u'\n\n'
-				set_plugin_property(plugin=plugin_name, property=u'disabled', value=True)
+			"""
+			list_old_plugins = ["markers_os3_extension", "markers_os3_init", "markers_os3_send", "markers_extension", "markers_init", "markers_send"]
 
-		for extension_name in extension_list:
-			if extension_name in list_old_plugins:
-				md += extension_name + u'\n\n'
-				set_plugin_property(plugin=extension_name, property=u'disabled', value=True)
+			'Get list of plugins and extensions'
+			plugin_list = list_plugins(filter_disabled=False)
+			extension_list = list_plugins(filter_disabled=False, _type=u'extensions')
 
-		try:		
+			'loop through lists and disable the old plugins and extensions'
+			for plugin_name in plugin_list:
+				if plugin_name in list_old_plugins:
+					md += plugin_name + u'\n\n'
+					cur_prop = plugin_properties(plugin=plugin_name)
+					for prop in cur_prop:
+						md += prop + u'\n\n'
+					set_plugin_property(plugin=plugin_name, property=u'disabled', value=True)
+
+			for extension_name in extension_list:
+				if extension_name in list_old_plugins:
+					md += extension_name + u'\n\n'
+					set_plugin_property(plugin=extension_name, property=u'disabled', value=True)
 
 			disabled_plugins = cfg[u'disabled_%s' % u'plugins']
 			md += str(type(disabled_plugins))
+
+			"""
 			
 		except:
 			md += f'\n\nError: {sys.exc_info()[1]}'
