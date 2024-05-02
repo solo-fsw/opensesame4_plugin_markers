@@ -41,10 +41,10 @@ class MarkersOs4Extension(BaseExtension):
 				plugins_available = []
 
 				'Get list of plugins and extensions'
-				plugin_list = list_plugins(filter_disabled=False)
-				extension_list = list_plugins(filter_disabled=False, _type=u'extensions')
+				plugin_list = list_plugins(filter_disabled=True)
+				extension_list = list_plugins(filter_disabled=True, _type=u'extensions')
 
-				'loop through lists and disable the old plugins and extensions'
+				'loop through lists and check whether old plugins are installed'
 				for plugin_name in plugin_list:
 					if plugin_name in list_old_plugins:
 						plugins_available.append(plugin_name)
@@ -63,16 +63,6 @@ class MarkersOs4Extension(BaseExtension):
 				self.extension_manager.fire(u'notify',
                     message=_(u'The markers_os4 plugin can only run in OpenSesame 4. Check your version and check the markers version tab for more info.'),
                     category=u'warning')
-
-			"""
-			
-
-
-
-			disabled_plugins = cfg[u'disabled_%s' % u'plugins']
-			md += str(type(disabled_plugins))
-
-			"""
 			
 		except:
 			md += f'\n\nError: {sys.exc_info()[1]}'
