@@ -11,7 +11,7 @@ from libopensesame.exceptions import UserAborted
 from libqtopensesame.extensions import BaseExtension
 from libopensesame import misc
 from libopensesame.plugins import list_plugins, set_plugin_property, plugin_properties
-from libopensesame.metadata import main_version, major_version, strict_version, deb_version
+from libopensesame.metadata import major_version
 from libqtopensesame.misc.config import cfg
 import sys
 
@@ -35,12 +35,17 @@ class MarkersOs4Extension(BaseExtension):
 
 		try:	
 
-			#if major_version[0] == '4':
+			if major_version[0] == '4':
 
-			md += u'Major version: ' + major_version[0] + u'\n\n'
-			md += u'Main version: ' + main_version + u'\n\n'
-			md += u'Strict version: ' + str(strict_version) + u'\n\n'
-			md += u'Deb version: ' + deb_version + u'\n\n'
+				self.extension_manager.fire(u'notify',
+                    message=_(u'The markers_os4 plugin can only run in OpenSesame 4. Doing great!'),
+                    category=u'warning')
+
+			else:
+
+				self.extension_manager.fire(u'notify',
+                    message=_(u'The markers_os4 plugin can only run in OpenSesame 4. Check your version and check the markers version tab for more info.'),
+                    category=u'warning')
 
 			"""
 			list_old_plugins = ["markers_os3_extension", "markers_os3_init", "markers_os3_send", "markers_extension", "markers_init", "markers_send"]
