@@ -35,7 +35,9 @@ class MarkersOs4Extension(BaseExtension):
 
 		try:	
 
-			md += u'Major version: ' + major_version + u'\n\n'
+			#if major_version[0] == '4':
+
+			md += u'Major version: ' + major_version[0] + u'\n\n'
 			md += u'Main version: ' + main_version + u'\n\n'
 			md += u'Strict version: ' + str(strict_version) + u'\n\n'
 			md += u'Deb version: ' + deb_version + u'\n\n'
