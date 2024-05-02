@@ -41,8 +41,8 @@ class MarkersOs4Extension(BaseExtension):
 				plugins_available = []
 
 				'Get list of plugins and extensions'
-				plugin_list = list_plugins(filter_disabled=True)
-				extension_list = list_plugins(filter_disabled=True, _type=u'extensions')
+				plugin_list = list_plugins(filter_disabled=False)
+				extension_list = list_plugins(filter_disabled=False, _type=u'extensions')
 
 				'loop through lists and check whether old plugins are installed'
 				for plugin_name in plugin_list:
@@ -60,7 +60,7 @@ class MarkersOs4Extension(BaseExtension):
 					
 					md += 'The following outdated plugins/extensions were found: \n\n'
 					for plugin in plugins_available:
-						md += '-' + str(plugin) + '\n'
+						md += '- ' + str(plugin) + '\n\n'
 
 			else:
 
