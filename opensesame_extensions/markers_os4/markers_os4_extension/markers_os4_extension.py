@@ -31,49 +31,65 @@ class MarkersOs4Extension(BaseExtension):
 			Handles startup of OpenSesame: disables outdated plugins
 		"""		
 
-		md = u'Time: ' + str(time.ctime()) + u'\n\n'
+		md = ''	
 
-		try:	
+		if major_version[0] == '4':
 
-			if major_version[0] == '4':
+			list_old_plugins = ["markers_os3_extension", "markers_os3_init", "markers_os3_send", "markers_extension", "markers_init", "markers_send"]
+			plugins_available = []
 
-				list_old_plugins = ["markers_os3_extension", "markers_os3_init", "markers_os3_send", "markers_extension", "markers_init", "markers_send"]
-				plugins_available = []
+			# Get list of plugins and extensions
+			plugin_list = list_plugins(filter_disabled=True)
+			extension_list = list_plugins(filter_disabled=True, _type=u'extensions')
 
-				'Get list of plugins and extensions'
-				plugin_list = list_plugins(filter_disabled=True)
-				extension_list = list_plugins(filter_disabled=True, _type=u'extensions')
+			# Loop through lists and check whether old plugins/extensions are installed
+			for plugin_name in plugin_list:
+				if plugin_name in list_old_plugins:
+					cfg_key = f'plugin_enabled_{plugin_name}'
+					# Ignore disabled plugins
+					if cfg_key in cfg and not cfg[cfg_key]:
+						continue
+					plugins_available.append(plugin_name)
 
-				'loop through lists and check whether old plugins are installed'
-				for plugin_name in plugin_list:
-					if plugin_name in list_old_plugins:
-						if not plugin_disabled(plugin_name):
-							plugins_available.append(plugin_name)
+			for extension_name in extension_list:
+				if extension_name in list_old_plugins:
+					cfg_key = f'plugin_enabled_{extension_name}'
+					# Ignore disabled extension
+					if cfg_key in cfg and not cfg[cfg_key]:
+						continue
+					plugins_available.append(extension_name)
 
-				for extension_name in extension_list:
-					if extension_name in list_old_plugins:
-						plugins_available.append(extension_name)
-
-				if plugins_available:
-					self.extension_manager.fire(u'notify',
-						message=_(u'One or more outdated marker plugins were found. Please check the markers version tab for more info.'),
-						category=u'warning')
-					
-					md += 'The following outdated plugins/extensions were found: \n\n'
-					for plugin in plugins_available:
-						md += '- ' + str(plugin) + '\n\n'
-
-			else:
-
+			if plugins_available:
 				self.extension_manager.fire(u'notify',
-                    message=_(u'The markers_os4 plugin can only run in OpenSesame 4. Check your version and check the markers version tab for more info.'),
-                    category=u'warning')
-			
-		except:
-			md += f'\n\nError: {sys.exc_info()[1]}'
+					message=_(u'One or more outdated marker plugins were found. Please check the markers plugin warning tab for more info.'),
+					category=u'warning')
+				
+				md += '**Warning:** The following outdated marker plugins/extensions were found: \n\n'
+				for plugin in plugins_available:
+					md += '- ' + str(plugin) + '\n\n'
 
-		self.tabwidget.open_markdown(md, title=_(u'Markers version'),
-									icon=u'document-new')			
+				md += 'These plugins/extension cannot be used in OpenSesame 4. It is advised to disable them in Tools > Preferences > Plugins tab.'
+
+				self.tabwidget.open_markdown(md, title=_(u'Markers plugin warning'), icon=u'document-new')
+
+		else:
+
+			self.extension_manager.fire(u'notify',
+				message=_(u'The markers_os4 plugin can only run in OpenSesame 4. Please check the markers plugin warning tab for more info.'),
+				category=u'warning')
+			
+			md += '**Warning:** The markers_os4 plugin has been installed, but will not work in the current version of OpenSesame.\n\n'
+			md += 'This plugin contains the following elements:\n\n'
+			md += '- markers_os4_extension\n\n'
+			md += '- markers_os4_init\n\n'
+			md += '- markers_os4_send\n\n'
+			md += 'It is advised to disable the plugins/extensions as listed above in Tools > Preferences > Plugins tab.\n\n'
+			md += '''When using OpenSesame 3 and you want to send markers with a Leiden Univ marker device, 
+					please install the markers_os3 plugin: [https://github.com/solo-fsw/opensesame3_plugin_markers](https://github.com/solo-fsw/opensesame3_plugin_markers).'''
+		
+			self.tabwidget.open_markdown(md, title=_(u'Markers plugin warning'), icon=u'document-new')
+
+			
 
 	def event_end_experiment(self, ret_val):
 
