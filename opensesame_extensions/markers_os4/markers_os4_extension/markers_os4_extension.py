@@ -41,8 +41,8 @@ class MarkersOs4Extension(BaseExtension):
 				plugins_available = []
 
 				'Get list of plugins and extensions'
-				plugin_list = list_plugins(filter_disabled=False)
-				extension_list = list_plugins(filter_disabled=False, _type=u'extensions')
+				plugin_list = list_plugins(filter_disabled=True)
+				extension_list = list_plugins(filter_disabled=True, _type=u'extensions')
 
 				'loop through lists and check whether old plugins are installed'
 				for plugin_name in plugin_list:
@@ -71,7 +71,7 @@ class MarkersOs4Extension(BaseExtension):
 		except:
 			md += f'\n\nError: {sys.exc_info()[1]}'
 
-		self.tabwidget.open_markdown(md, title=_(u'debugging'),
+		self.tabwidget.open_markdown(md, title=_(u'Markers version'),
 									icon=u'document-new')			
 
 	def event_end_experiment(self, ret_val):
