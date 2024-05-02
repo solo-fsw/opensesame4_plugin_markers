@@ -57,6 +57,10 @@ class MarkersOs4Extension(BaseExtension):
 					self.extension_manager.fire(u'notify',
 						message=_(u'One or more outdated marker plugins were found. Please check the markers version tab for more info.'),
 						category=u'warning')
+					
+					md += 'The following outdated plugins/extensions were found: \n\n'
+					for plugin in plugins_available:
+						md += '-' + str(plugin) + '\n'
 
 			else:
 
