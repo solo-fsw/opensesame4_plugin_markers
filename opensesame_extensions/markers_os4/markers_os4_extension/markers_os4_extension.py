@@ -37,7 +37,7 @@ class MarkersOs4Extension(BaseExtension):
 
 			md += u'Major version: ' + major_version + u'\n\n'
 			md += u'Main version: ' + main_version + u'\n\n'
-			md += u'Strict version: ' + strict_version + u'\n\n'
+			md += u'Strict version: ' + str(strict_version) + u'\n\n'
 			md += u'Deb version: ' + deb_version + u'\n\n'
 
 			"""
