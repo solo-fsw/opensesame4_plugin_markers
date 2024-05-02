@@ -20,7 +20,7 @@ class MarkersOs4Extension(BaseExtension):
 
 	"""
 	desc:
-		- Disables other marker plugins.
+		- Checks OpenSesame version on startup
 		- Shows marker tables in separate tab after an experiment has finished.
 	"""
 
@@ -37,9 +37,26 @@ class MarkersOs4Extension(BaseExtension):
 
 			if major_version[0] == '4':
 
-				self.extension_manager.fire(u'notify',
-                    message=_(u'The markers_os4 plugin can only run in OpenSesame 4. Doing great!'),
-                    category=u'warning')
+				list_old_plugins = ["markers_os3_extension", "markers_os3_init", "markers_os3_send", "markers_extension", "markers_init", "markers_send"]
+				plugins_available = []
+
+				'Get list of plugins and extensions'
+				plugin_list = list_plugins(filter_disabled=False)
+				extension_list = list_plugins(filter_disabled=False, _type=u'extensions')
+
+				'loop through lists and disable the old plugins and extensions'
+				for plugin_name in plugin_list:
+					if plugin_name in list_old_plugins:
+						plugins_available.append(plugin_name)
+
+				for extension_name in extension_list:
+					if extension_name in list_old_plugins:
+						plugins_available.append(extension_name)
+
+				if plugins_available:
+					self.extension_manager.fire(u'notify',
+						message=_(u'One or more outdated marker plugins were found. Please check the markers version tab for more info.'),
+						category=u'warning')
 
 			else:
 
@@ -48,25 +65,9 @@ class MarkersOs4Extension(BaseExtension):
                     category=u'warning')
 
 			"""
-			list_old_plugins = ["markers_os3_extension", "markers_os3_init", "markers_os3_send", "markers_extension", "markers_init", "markers_send"]
+			
 
-			'Get list of plugins and extensions'
-			plugin_list = list_plugins(filter_disabled=False)
-			extension_list = list_plugins(filter_disabled=False, _type=u'extensions')
 
-			'loop through lists and disable the old plugins and extensions'
-			for plugin_name in plugin_list:
-				if plugin_name in list_old_plugins:
-					md += plugin_name + u'\n\n'
-					cur_prop = plugin_properties(plugin=plugin_name)
-					for prop in cur_prop:
-						md += prop + u'\n\n'
-					set_plugin_property(plugin=plugin_name, property=u'disabled', value=True)
-
-			for extension_name in extension_list:
-				if extension_name in list_old_plugins:
-					md += extension_name + u'\n\n'
-					set_plugin_property(plugin=extension_name, property=u'disabled', value=True)
 
 			disabled_plugins = cfg[u'disabled_%s' % u'plugins']
 			md += str(type(disabled_plugins))
