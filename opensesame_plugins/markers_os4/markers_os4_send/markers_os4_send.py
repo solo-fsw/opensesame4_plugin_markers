@@ -12,6 +12,7 @@ import sys
 import re
 import time
 
+
 class MarkersOs4Send(Item):
     """
     This class handles the basic functionality of the item.

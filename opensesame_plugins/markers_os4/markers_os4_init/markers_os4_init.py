@@ -89,7 +89,8 @@ class MarkersOs4Init(Item):
         self.experiment.python_workspace['markers_tags'].append(self.get_tag_gui())
 
     def set_marker_prop(self, marker_prop):
-        # Save in var (so that it is logged) and in python_workspace
+        # Save in var, so that it is logged by OS, and in python_workspace, so that it can be 
+        # accessed by the markers extension
         for prop in marker_prop:
             setattr(self.experiment.var, f"markers_{prop}_{self.get_tag_gui()}", marker_prop[prop])
         self.experiment.python_workspace[f'markers_prop_{self.get_tag_gui()}'] = marker_prop
@@ -114,7 +115,7 @@ class MarkersOs4Init(Item):
             Prepare phase.
         """
 
-        # Check input of plugin:
+        # Check input of plugin
         device_tag = self.get_tag_gui()
         if not(bool(re.match("^[A-Za-z0-9_-]*$", device_tag)) and bool(re.match("^[A-Za-z]*$", device_tag[0]))):
             raise osexception(f"Incorrect device tag: {device_tag}. "
@@ -125,13 +126,10 @@ class MarkersOs4Init(Item):
         if device_address != u'ANY' and re.match("^COM\d{1,3}", str(device_address)) is None:
             raise osexception(f"Incorrect marker device address: {device_address}")
 
-        # Get com port and device info:
+        # Get device info
         info = self.resolve_com_port()
-
-        # Save com port in device and save all device info
         info['device']['ComPort'] = info['com_port']
         self.set_marker_prop(info['device'])
-
 
         # Call the parent constructor
         Item.prepare(self)
@@ -151,8 +149,7 @@ class MarkersOs4Init(Item):
         if self.is_already_init():
             raise osexception("Marker device already initialized.")
 
-
-        # Build marker manager:
+        # Build marker manager
         marker_manager = mark.MarkerManager(device_type=device,
                                             device_address=com_port,
                                             crash_on_marker_errors=self.get_crash_on_mark_error_gui(),
@@ -176,7 +173,7 @@ class MarkersOs4Init(Item):
         # Save marker tables
         self.set_marker_tables()        
 
-        # Add cleanup function:
+        # Cleanup
         self.experiment.cleanup_functions.append(self.cleanup)
 
         self.experiment.var.marker_device_used = True
@@ -204,7 +201,7 @@ class MarkersOs4Init(Item):
             except:
                 print("WARNING: Could not save marker file.")
 
-        # Close marker device:
+        # Close marker device
         self.close()
 
     def close(self):
