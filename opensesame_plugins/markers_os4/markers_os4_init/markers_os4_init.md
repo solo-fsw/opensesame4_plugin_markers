@@ -1,5 +1,5 @@
 # Markers plugin for OpenSesame
-The markers_os4 plugin is used to send markers to different Leiden Univ FSW marker devices. See [here](https://researchwiki.solo.universiteitleiden.nl/xwiki/wiki/researchwiki.solo.universiteitleiden.nl/view/Hardware/Markers%20and%20Events/) for more information on markers in general. Note that this plugin is only compatible with OpenSesame 4.
+The markers_os4 plugin is used to send markers to different Leiden Univ FSW marker devices ([repo](https://github.com/solo-fsw/opensesame4_plugin_markers)). Note that this plugin is only compatible with OpenSesame 4.
 
 # Initializing the Marker Device
 Add a markers_os4_init item to the start of your experiment. This item handles the initialization of the marker device and must be run before subsequent markers_os4_send items can send markers.
