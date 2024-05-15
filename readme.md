@@ -1,8 +1,8 @@
 # Plugin for OpenSesame for sending markers
-This is an OpenSesame plugin for sending markers with Leiden University devices. 
+This is an OpenSesame plugin for sending markers with Leiden University devices. This plugin uses the marker_management module from the python markers repo: https://github.com/solo-fsw/python-markers
 
 > **Note**
-> - This plugin is only available for OpenSesame 4.
+> - This plugin is only available for OpenSesame 4. The markers plugin for OpenSesame 3 can be found here: https://github.com/solo-fsw/opensesame3_plugin_markers
 > - This plugin is only available for Windows. 
 
 ## Installation
@@ -50,4 +50,14 @@ When using OpenSesame that was installed in a Conda environment, the plugin shou
 Help and instructions on how to use the plugin can be found [here](/opensesame_plugins/markers_os4/markers_os4_init/markers_os4_init.md) and in OpenSesame it can be found after inserting a markers item in your experiment by clicking on the blue questionmark in the upper right corner of the markers item tab. ![image](https://user-images.githubusercontent.com/56065641/217841460-634aee68-7b98-4154-8275-ac75337788e7.png).
 
 In the samples folder a sample task can be found, which can also be downloaded [here](https://downgit.github.io/#/home?url=https://github.com/solo-fsw/opensesame4_plugin_markers/tree/main/samples) (download starts immediately using DownGit).
+
+## References
+- [SOLO wiki on markers](https://researchwiki.solo.universiteitleiden.nl/xwiki/wiki/researchwiki.solo.universiteitleiden.nl/view/Hardware/Markers%20and%20Events/)
+- [Python markers github page](https://github.com/solo-fsw/python-markers)
+- [OpenSesame 3 Markers plugin](https://github.com/solo-fsw/opensesame3_plugin_markers)
+- [SOLO wiki on the UsbParMarker](https://researchwiki.solo.universiteitleiden.nl/xwiki/wiki/researchwiki.solo.universiteitleiden.nl/view/Hardware/Markers%20and%20Events/UsbParMarker/)
+- [SOLO wiki on Eva](https://researchwiki.solo.universiteitleiden.nl/xwiki/wiki/researchwiki.solo.universiteitleiden.nl/view/Hardware/Markers%20and%20Events/EVA/)
+- [UsbParMarker github page](https://github.com/solo-fsw/UsbParMarker)
+- [Eva github page](https://github.com/solo-fsw/Eva)
+
 
