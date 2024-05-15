@@ -27,7 +27,7 @@ class MarkersOs4Extension(BaseExtension):
 
 		"""
 		desc:
-			Handles startup of OpenSesame: checks OpenSesame version and other marker plugins
+			Handles startup of OpenSesame: checks OpenSesame version and whether other, incompatible marker plugins are installed
 		"""		
 
 		md = ''	
@@ -61,7 +61,7 @@ class MarkersOs4Extension(BaseExtension):
 
 			if plugins_available:
 				self.extension_manager.fire(u'notify',
-					message=_(u'One or more marker plugins with incompatible versions were found. Check the markers plugin warning tab for more info.'),
+					message=_(u'One or more marker plugins with incompatible versions were found. Check the markers plugin warning tab for more info (disable one-tab mode).'),
 					category=u'warning')
 				
 				md += '**Warning:** The following marker plugins/extensions were found: \n\n'
@@ -76,7 +76,7 @@ class MarkersOs4Extension(BaseExtension):
 		else:
 
 			self.extension_manager.fire(u'notify',
-				message=_(u'The markers_os4 plugin can only run in OpenSesame 4. Please check the markers plugin warning tab for more info.'),
+				message=_(u'The markers_os4 plugin can only run in OpenSesame 4. Check the markers plugin warning tab for more info (disable one-tab mode).'),
 				category=u'warning')
 			
 			md += '**Warning:** The markers_os4 plugin has been installed, but will not work in the current version of OpenSesame.\n\n'
