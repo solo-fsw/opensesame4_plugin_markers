@@ -27,6 +27,7 @@ jobs:
           python -m pip install psychopy --no-deps
           python -m pip install psychopy-sounddevice
           python -m pip install soundfile
+          python -m pip install wxPython
           python -m pip install git+https://github.com/solo-fsw/opensesame4_plugin_markers
         #   python -m pip install wxPython
       - name: Run all tests
