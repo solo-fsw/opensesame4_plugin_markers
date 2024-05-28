@@ -19,6 +19,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install opensesame-core
+          python -m pip install pyqt5-tools
           python -m pip install git+https://github.com/solo-fsw/opensesame4_plugin_markers
         #   python -m pip install rapunzel
         #   python -m pip install opensesame-extension-osweb
