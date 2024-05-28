@@ -27,8 +27,23 @@ class MarkersOs4Extension(BaseExtension):
 
 		"""
 		desc:
-			Handles startup of OpenSesame: checks OpenSesame version and whether other, incompatible marker plugins are installed
+			Handles startup of OpenSesame
 		"""		
+
+		self.check_version()
+
+
+	def event_open_experiment(self, path):
+
+		"""
+		desc:
+			Handles open experiment
+		"""	
+
+		self.check_version()
+
+
+	def check_version(self):
 
 		md = ''	
 
@@ -64,12 +79,12 @@ class MarkersOs4Extension(BaseExtension):
 					message=_(u'One or more marker plugins with incompatible versions were found. Check the markers plugin warning tab for more info (disable one-tab mode).'),
 					category=u'warning')
 				
-				md += '**Warning:** The following marker plugins/extensions were found: \n\n'
+				md += '**Warning:** The following incompatible marker plugins/extensions were found: \n\n'
 				for plugin in plugins_available:
 					md += '- ' + str(plugin) + '\n\n'
 
-				md += '''These plugins/extensions cannot be used in OpenSesame 4. 
-						It is advised to disable them in Tools > Preferences > Plugins tab.'''
+				md += '''These plugins/extensions cannot be used in OpenSesame 4.
+						Please disable them in **Tools** > **Preferences** > **Plugins** and instead use the markers_os4 plugin and extension.'''
 
 				self.tabwidget.open_markdown(md, title=_(u'Markers plugin warning'), icon=u'document-new')
 
@@ -91,7 +106,6 @@ class MarkersOs4Extension(BaseExtension):
 		
 			self.tabwidget.open_markdown(md, title=_(u'Markers plugin warning'), icon=u'document-new')
 
-			
 
 	def event_end_experiment(self, ret_val):
 
