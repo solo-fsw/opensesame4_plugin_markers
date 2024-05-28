@@ -2,6 +2,7 @@
 import unittest
 import os
 from libopensesame.experiment import experiment
+import PyQt5
 # from qtpy.QtWidgets import QApplication
 
 logfile_path = os.path.join(os.path.dirname(__file__), r'./data/tmp.csv')
