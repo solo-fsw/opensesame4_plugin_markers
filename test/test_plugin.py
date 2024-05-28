@@ -2,7 +2,7 @@
 import unittest
 import os
 from libopensesame.experiment import experiment
-from qtpy.QtWidgets import QApplication
+# from qtpy.QtWidgets import QApplication
 
 logfile_path = os.path.join(os.path.dirname(__file__), r'./data/tmp.csv')
 experiment_path = os.path.join(os.path.dirname(__file__), r'data')
@@ -19,7 +19,7 @@ normal_experiments = [
 class runExperiments(unittest.TestCase):
     
     def test_runTests(self):
-        app = QApplication([])
+        # app = QApplication([])
                 
         for experiment_file in normal_experiments:
             print(f"Testing {experiment_file}")
@@ -33,7 +33,7 @@ class runExperiments(unittest.TestCase):
             self.assertEqual(True, True)
             
     def test_runTestsCrash(self):
-        app = QApplication([])
+        # app = QApplication([])
         for experiment_file in crashing_experiments:
             print(f"Testing {experiment_file}")
             e = experiment(
