@@ -15,11 +15,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-    #   - name: Install linux packages
-    #     run: |
-    #       sudo apt-get update
-    #       sudo apt-get install -y libgtk2.0-dev
-    #       sudo apt-get build-dep gedit
+      - name: Install linux packages
+        run: |
+          sudo apt-get install python-wxtools
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -30,6 +28,7 @@ jobs:
           python -m pip install psychopy-sounddevice
           python -m pip install soundfile
           python -m pip install git+https://github.com/solo-fsw/opensesame4_plugin_markers
+        #   python -m pip install wxPython
       - name: Run all tests
         run: |
           python -m unittest -v test.test_plugin 
