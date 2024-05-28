@@ -17,6 +17,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install linux packages
         run: |
+          sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources
           sudo apt-get update
           sudo apt-get install -y libgtk2.0-dev
           sudo apt-get build-dep gedit
