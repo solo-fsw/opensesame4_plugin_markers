@@ -27,7 +27,7 @@ jobs:
           python -m pip install psychopy --no-deps
           python -m pip install psychopy-sounddevice
           python -m pip install soundfile
-          python -m pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04 wxPython
+          python -m pip install https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04/wxPython-4.2.1-cp311-cp311-linux_x86_64.whl
           python -m pip install git+https://github.com/solo-fsw/opensesame4_plugin_markers
         #   python -m pip install wheel
         #   python -m pip install wxPython
