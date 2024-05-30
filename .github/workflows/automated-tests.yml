@@ -18,6 +18,9 @@ jobs:
       - name: Install linux packages
         run: |
           sudo apt-get install python-wxtools
+          sudo apt-get install libgtk-3-dev build-essential checkinstall
+          sudo apt install gcc make gcc-arm-linux-gnueabihf binutils-arm-linux-gnueabihf
+          sudo apt install libgtk2.0-dev
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
