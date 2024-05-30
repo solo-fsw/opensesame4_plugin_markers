@@ -33,6 +33,7 @@ jobs:
           python -m pip install soundfile
           pip install psychtoolbox
           pip install SpeechRecognition
+          pip install pyglet
           python -m pip install git+https://github.com/solo-fsw/opensesame4_plugin_markers
       - name: Run all tests
         run: |
