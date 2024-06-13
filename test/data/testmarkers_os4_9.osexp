@@ -63,7 +63,7 @@ define markers_os4_send markers_os4_send
 	set marker_value "[marker_value]"
 	set marker_reset_to_zero yes
 	set marker_object_duration "[marker_duration]"
-	set marker_device_tag marker_device_1
+	set marker_device_tag marker_device_2
 	set description "Sends marker to Leiden Univ marker device - Markers plugin for OpenSesame 4"
 
 define logger new_logger

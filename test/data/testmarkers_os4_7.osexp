@@ -51,7 +51,7 @@ define sketchpad fixation
 define markers_os4_init markers_os4_init
 	set marker_gen_mark_file yes
 	set marker_flash_255 yes
-	set marker_dummy_mode yes
+	set marker_dummy_mode no
 	set marker_device_tag marker_device_1
 	set marker_device_serial ANY
 	set marker_device_addr ANY

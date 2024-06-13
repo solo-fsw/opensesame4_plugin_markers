@@ -41,6 +41,7 @@ define sequence experiment
 	set description "Runs a number of items in sequence"
 	run welcome always
 	run markers_os4_init True
+	run new_markers_os4_init True
 	run new_loop always
 
 define sketchpad fixation
@@ -50,7 +51,7 @@ define sketchpad fixation
 
 define markers_os4_init markers_os4_init
 	set marker_gen_mark_file yes
-	set marker_flash_255 yes
+	set marker_flash_255 no
 	set marker_dummy_mode yes
 	set marker_device_tag marker_device_1
 	set marker_device_serial ANY
@@ -101,6 +102,17 @@ define loop new_loop
 	setcycle 9 marker_value 10
 	setcycle 9 marker_duration 10
 	run new_sequence
+
+define markers_os4_init new_markers_os4_init
+	set marker_gen_mark_file yes
+	set marker_flash_255 no
+	set marker_dummy_mode yes
+	set marker_device_tag marker_device_1
+	set marker_device_serial ANY
+	set marker_device_addr ANY
+	set marker_device ANY
+	set marker_crash_on_mark_errors yes
+	set description "Initializes Leiden Univ marker device - Markers plugin for OpenSesame 4"
 
 define sequence new_sequence
 	set flush_keyboard yes
