@@ -9,12 +9,22 @@ logfile_path = os.path.join(os.path.dirname(__file__), r'./data/tmp.csv')
 experiment_path = os.path.join(os.path.dirname(__file__), r'data')
 
 crashing_experiments = [
-    "testmarkers_os4_2.osexp",
-    "testmarkers_os4_3.osexp"
+    "fail_testmarkers_os4_init_twice.osexp",
+    "fail_testmarkers_os4_invalid_device_address.osexp",
+    "fail_testmarkers_os4_invalid_device_tag.osexp",
+    "fail_testmarkers_os4_invalid_marker_value.osexp",
+    "fail_testmarkers_os4_invalid_object_dur.osexp",
+    "fail_testmarkers_os4_marker_duration_error.osexp",
+    "fail_testmarkers_os4_no_init_obj.osexp",
+    "fail_testmarkers_os4_no_matching_device_tags.osexp",
+    "fail_testmarkers_os4_same_value_twice.osexp",
+    "fail_testmarkers_os4_wrong_address.osexp"
 ]
 
 normal_experiments = [
-    "testmarkers_os4_1.osexp"
+    "pass_testmarkers_os4_basic.osexp",
+    "pass_testmarkers_os4_multiple_devices.osexp",
+    "pass_testmarkers_os4_no_marker_objects.osexp"
 ]
 
 class runExperiments(unittest.TestCase):
