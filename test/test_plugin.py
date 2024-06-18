@@ -18,7 +18,7 @@ crashing_experiments = [
     "fail_testmarkers_os4_no_init_obj.osexp",
     "fail_testmarkers_os4_no_matching_device_tags.osexp",
     "fail_testmarkers_os4_same_value_twice.osexp",
-    "fail_testmarkers_os4_wrong_address.osexp"
+    "fail_testmarkers_os4_no_device_attached.osexp"
 ]
 
 normal_experiments = [

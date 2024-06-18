@@ -26,7 +26,7 @@ set font_size 18
 set font_italic False
 set font_family mono
 set font_bold False
-set experiment_path "C:\\ExperimentData\\repos\\SOLO-FSW\\opensesame4_plugin_markers\\test\\data"
+set experiment_path "D:/opensesame4_plugin_markers/test/data"
 set disable_garbage_collection False
 set description "The main experiment item"
 set coordinates uniform
@@ -54,7 +54,7 @@ define markers_os4_init markers_os4_init
 	set marker_dummy_mode yes
 	set marker_device_tag marker_device_1
 	set marker_device_serial ANY
-	set marker_device_addr ANY
+	set marker_device_addr address
 	set marker_device ANY
 	set marker_crash_on_mark_errors yes
 	set description "Initializes Leiden Univ marker device - Markers plugin for OpenSesame 4"
