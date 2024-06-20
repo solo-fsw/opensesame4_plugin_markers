@@ -1,0 +1,143 @@
+---
+API: 3
+OpenSesame: 4.0.24
+Platform: nt
+---
+set width 1024
+set title "Nieuw experiment"
+set subject_parity even
+set subject_nr 0
+set start experiment
+set sound_sample_size -16
+set sound_freq 48000
+set sound_channels 2
+set sound_buf_size 1024
+set round_decimals 2
+set height 768
+set fullscreen no
+set form_clicks no
+set foreground white
+set font_underline no
+set font_size 18
+set font_italic no
+set font_family mono
+set font_bold no
+set experiment_path None
+set disable_garbage_collection yes
+set description "The main experiment item"
+set canvas_backend psycho
+set background "#3d3846"
+
+define sequence experiment
+	set flush_keyboard yes
+	set description "Voert een aantal items achter elkaar uit"
+	run getting_started True
+	run welcome True
+	run new_markers_os4_init True
+	run new_parallel_port_trigger_init True
+	run new_loop True
+
+define notepad getting_started
+	__note__
+	Welcome to OpenSesame 4.0 "Melodramatic Milgram"!
+	If you are new to OpenSesame, it is a good idea to follow one of the tutorials,
+	which can be found on the documentation site:
+	- <http://osdoc.cogsci.nl/>
+	You can also check out the examples. These can be opened via:
+	- Menu -> Tools -> Example experiments.
+	And feel free to ask for help on the forum:
+	- <http://forum.cogsci.nl/>
+	Have fun with OpenSesame!
+	__end__
+	set description "A simple notepad to document your experiment. This plug-in does nothing."
+
+define markers_os4_send new_1_markers_os4_send
+	set marker_value 0
+	set marker_reset_to_zero no
+	set marker_object_duration 0
+	set marker_device_tag marker_device_1
+	set description "Sends marker to Leiden Univ marker device - Markers plugin for OpenSesame 4"
+
+define parallel_port_trigger_send new_1_parallel_port_trigger_send
+	set value 0
+	set duration_check no
+	set duration 0
+	set description "Parallel Port Trigger - send trigger"
+
+define loop new_loop
+	set source table
+	set repeat 20
+	set order random
+	set description "Voert herhaaldelijk een ander item uit"
+	set cycles 1
+	set continuous no
+	set break_if_on_first yes
+	set break_if False
+	setcycle 0 empty_column ""
+	run new_sequence
+
+define markers_os4_init new_markers_os4_init
+	set marker_gen_mark_file yes
+	set marker_flash_255 no
+	set marker_dummy_mode no
+	set marker_device_tag marker_device_1
+	set marker_device_serial ANY
+	set marker_device_addr ANY
+	set marker_device ANY
+	set marker_crash_on_mark_errors yes
+	set description "Initializes Leiden Univ marker device - Markers plugin for OpenSesame 4"
+
+define markers_os4_send new_markers_os4_send
+	set marker_value 1
+	set marker_reset_to_zero no
+	set marker_object_duration 0
+	set marker_device_tag marker_device_1
+	set description "Sends marker to Leiden Univ marker device - Markers plugin for OpenSesame 4"
+
+define parallel_port_trigger_init new_parallel_port_trigger_init
+	set verbose no
+	set port 0x5FF8
+	set dummy_mode no
+	set description "Parallel Port Trigger - initializes the parallel port device"
+
+define parallel_port_trigger_send new_parallel_port_trigger_send
+	set value 1
+	set duration_check no
+	set duration 0
+	set description "Parallel Port Trigger - send trigger"
+
+define sequence new_sequence
+	set flush_keyboard yes
+	set description "Voert een aantal items achter elkaar uit"
+	run send_marker_display True
+	run new_parallel_port_trigger_send True
+	run new_markers_os4_send True
+	run wait_100ms True
+	run new_1_parallel_port_trigger_send True
+	run new_1_markers_os4_send True
+	run wait_10ms True
+
+define sketchpad send_marker_display
+	set duration 0
+	set description "Stimuli weergeven"
+	draw textline center=1 color=white font_bold=no font_family=mono font_italic=no font_size=18 html=yes show_if=True text="sending markers" x=0 y=0 z_index=0
+
+define advanced_delay wait_100ms
+	set jitter_mode Uniform
+	set jitter 0
+	set duration 100
+	set description "A random delay sampled from either a normal or uniform distribution"
+
+define advanced_delay wait_10ms
+	set jitter_mode Uniform
+	set jitter 0
+	set duration 10
+	set description "A random delay sampled from either a normal or uniform distribution"
+
+define sketchpad welcome
+	set start_response_interval no
+	set reset_variables no
+	set duration keypress
+	set description "Stimuli weergeven"
+	draw textline center=1 color=white font_bold=no font_family=serif font_italic=no font_size=32 html=yes show_if=True text="OpenSesame 4.0 <i>Melodramatic Milgram</i>" x=0 y=0 z_index=0
+
