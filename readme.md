@@ -2,7 +2,7 @@
 This is an OpenSesame plugin for sending markers with Leiden University devices. This plugin uses the marker_management module from the python markers repo: https://github.com/solo-fsw/python-markers
 
 > **Note**
-> TThis plugin is only available for OpenSesame 4. The markers plugin for OpenSesame 3 can be found here: https://github.com/>  solo-fsw/opensesame3_plugin_markers
+> This plugin is only available for OpenSesame 4. The markers plugin for OpenSesame 3 can be found here: https://github.com/>  solo-fsw/opensesame3_plugin_markers
 > 
 > **Note**
 > This plugin is only available for Windows. 
@@ -11,7 +11,7 @@ This is an OpenSesame plugin for sending markers with Leiden University devices.
 How the markers package can best be installed depends on the OpenSesame installation and whether it is installed system-wide (available for all users of the pc, usually through the Start menu), or whether it is installed in a Conda environment.
 
 ### OpenSesame system installation
-When using a system-wide installation of OpenSesame, the plugin can be installed in the Users folder `C:\Users\%USERNAME%\AppData\Roaming\Python\Python311\site-packages`. When different users need to use the plugin on one computer, they must all install the plugin separately.
+When using a system-wide installation of OpenSesame, the plugin can be installed in the Users folder `C:\Users\%USERNAME%\AppData\Roaming\Python\Python311\site-packages`. To do so, the `--user` flag must be used when installing the plugin with `pip install`.  When different users need to use the plugin on one computer, they must all install the plugin separately.
 
 - Make sure Git is installed.
 
@@ -29,7 +29,7 @@ When using a system-wide installation of OpenSesame, the plugin can be installed
     ![markers_send](/opensesame_plugins/markers_os4/markers_os4_send/markers_os4_send_large.png)
 
 ### OpenSesame in Conda environment
-When using OpenSesame that was installed in a Conda environment, the plugin should be installed in that environment. When you use different environments, the plugin needs to be installed in each of the environments. 
+When using OpenSesame that was installed in a Conda environment, the plugin should be installed in that environment. When you use different environments, the plugin needs to be installed in each of the environments. The plugin is not installed per user, therefore, do not use the `--user` flag when installing the plugin with `pip install`.
 
 - Make sure Git is installed.
 
