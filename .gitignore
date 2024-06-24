@@ -1,3 +1,7 @@
 # OpenSesame data files
 *.csv
 *.tsv
+
+# python files
+__pycache__/
+.vscode/
